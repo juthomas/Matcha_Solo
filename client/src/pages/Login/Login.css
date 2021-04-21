@@ -1,0 +1,123 @@
+.Login {
+	/* background-color: black; */
+	color: white;
+}
+
+.Login .Background{
+	z-index: -1;
+	background:black;
+	position:absolute;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	left:0px;
+}
+
+.Login .broMessage {
+	top: 170px;
+	position: absolute;
+	left: calc(50% - 120px/2 - 120px);
+	text-align: center;
+	font-family: "Vollkorn SC";
+	line-height: 30px;
+	font-size: 36px;
+}
+
+.Login .broMessage p{
+	margin-bottom: 20px;
+}
+
+
+.Login .logoandname {
+	color: white;
+	position: absolute;
+	left: calc(50% - 131px/2 - 109px);
+	top: 30px;
+	/* float:left; */
+	/* width:100%; */
+}
+
+.Login .wolflogo{
+	/* top: 0; */
+	/* left: 0px; */
+	/* position:relative; */
+	float:left;
+	width:100px;
+}
+
+.Login .apptext {
+	/* float:right; */
+	padding-top: 40px;
+	/* position:relative; */
+	/* left:40%; */
+	/* width:40%; */
+	/* vertical-align: top; */
+	font-family: "Vollkorn SC";
+	font-style: normal;
+	font-weight: normal;
+	width: 250px;
+	margin-left:100px;
+	text-align: center;
+	font-size: 48px;
+	line-height: 60px;
+}
+
+
+.Login a {
+	color: black;
+	text-decoration: none; /* no underline */
+}
+
+.Login .buttons {
+	/* left: 100px; */
+	left: 50px;
+	right: 50px;
+	bottom: 30px;
+	
+	/* text-decoration: none; */
+	/* color: black; */
+	font-family: "Vollkorn SC";
+	position: absolute;
+}
+
+
+
+
+.Login .spacer {
+	height: 40px;
+}
+
+.Login .button {
+	position: relative;
+	background-color: white;
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	display: inline-block;
+	line-height: normal;
+	vertical-align: middle;
+}
+
+.Login .button p{
+	margin-top: 0;
+	padding-top: 10px;
+	font-size: 24px;
+	line-height: 80px;
+	display: inline-block;
+	line-height: normal;
+	vertical-align: middle;
+}
+
+.Login .triangleButton1 {
+	position: absolute;
+	left: 0;
+	top: 0;
+	transform: rotate(-180deg);
+}
+
+.Login .triangleButton2 {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	/* transform: rotate(-180deg); */
+}

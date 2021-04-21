@@ -1,0 +1,40 @@
+.InputComponent .Input{
+	position:relative;
+	width: 100%;
+	height: 50px;
+	min-width: 200px;
+	padding-top: 5px;
+	/* min-height: 50px; */
+	background-color:white;
+	overflow:hidden;
+	border: 0;
+	font-family: 'Vollkorn SC', serif;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: none;
+	color: black;
+	text-align: center;
+	font-size: 30px;
+	--notchSize: 21px;
+	clip-path:
+	polygon(
+	  0% var(--notchSize), 
+	  var(--notchSize) 0%, 
+	  100% 0%, 
+	  100% var(--notchSize), 
+	  100% calc(100% - var(--notchSize)), 
+	  calc(100% - var(--notchSize)) 100%, 
+	  0% 100%, 
+	  0% calc(100% - var(--notchSize))
+	);
+}
+
+.InputComponent .Input:hover{
+	background-color:lightgrey;
+
+}
+
+.InputComponent .Input:focus{
+	outline: none;
+	background-color:rgb(192, 192, 192);
+}

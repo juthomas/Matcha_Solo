@@ -1,0 +1,69 @@
+.Register {
+	color: white;
+}
+
+.Register .Background{
+	z-index: -1;
+	background:black;
+	position:absolute;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	left:0px;
+}
+
+
+.Register .logoandname {
+	color: white;
+	position: absolute;
+	left: calc(50% - 131px/2 - 109px);
+	top: 30px;
+	/* float:left; */
+	/* width:100%; */
+}
+
+.Register .wolflogo{
+	/* top: 0; */
+	/* left: 0px; */
+	/* position:relative; */
+	float:left;
+	width:100px;
+}
+
+.Register .apptext {
+	/* float:right; */
+	padding-top: 40px;
+	/* position:relative; */
+	/* left:40%; */
+	/* width:40%; */
+	/* vertical-align: top; */
+	font-family: "Vollkorn SC";
+	font-style: normal;
+	font-weight: normal;
+	width: 250px;
+	margin-left:100px;
+	text-align: center;
+	font-size: 48px;
+	line-height: 60px;
+}
+
+
+
+.Register .spacer {
+	height: 30px;
+}
+
+.Register .buttons {
+	/* left: 100px; */
+	left: 50px;
+	right: 50px;
+	bottom: 30px;
+	
+	/* text-decoration: none; */
+	/* color: black; */
+	font-family: "Vollkorn SC";
+	position: absolute;
+}
+
+
+

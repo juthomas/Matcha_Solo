@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 import Register from "./pages/Register/Register"
 import Start from "./pages/Start/Start"
 // import Navbar from "./components/Navbar"
-// import Login from "./pages/Login/Login"
+import Login from "./pages/Login/Login"
 // import Upload from "./pages/Upload/Upload"
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
 			<Router>
 				
 				<Route path="/" exact render={() => <Start/>}/>
+				<Route path="/login" exact render={() => <Login/>}/>
 				<Route path="/register" exact render={() => <Register/>}/>
 				
 				{/* 
