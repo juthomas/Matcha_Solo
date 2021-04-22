@@ -1,13 +1,12 @@
 import React from 'react'
-import "./Login.css"
+import "./ResetCredentials.css"
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
 
-
-function Login() {
+function ResetCredentials() {
 	return (
-		<div className="Login">
+		<div className="ResetCredentials">
 			<div className="Background"/>
 			<div className="logoandname" >
 				<div className="wolflogo" >
@@ -15,23 +14,20 @@ function Login() {
 				</div>
 				<div className="apptext">Meater</div>
 			</div>
-			<div className="broMessage">
-				<p>brace yourself for</p>
-				🔥 EPIC BROS 🔥
+			<div className="resetCredentialsMessage">
+				The reset link will be sent 
+				to you by email
 			</div>
 			<div className="buttons" >
+				<Input placeholder="Login"/>
+				<Spacer height="30px"/>
 				<Input placeholder="Mail"/>
-				<Spacer height="30px"/>
-				<Input placeholder="Password" type="password"/>
-				<Spacer height="30px"/>
-				<div className="forgotPassword">
-					<a href="/resetcredentials">Forgot your password?</a>
-				</div>
-				<Spacer height="60px"/>
-				<Button text="login" onClick="/loggedin/home"/>
+				<Spacer height="124px"/>
+				<Button text="Send Mail" onClick="/setpassword"/>
 			</div>
 		</div>
 	)
 }
 
-export default Login
+
+export default ResetCredentials

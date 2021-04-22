@@ -43,7 +43,7 @@ function Register() {
 				<Spacer height="30px"/>
 				<Input placeholder="Password" type="password"/>
 				<Spacer height="60px"/>
-				<Button text="Register" onClick="/"/>
+				<Button text="Register" onClick="/mailconfirmation"/>
 			</div>
 		</div>
 	)

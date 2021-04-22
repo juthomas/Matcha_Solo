@@ -1,0 +1,12 @@
+.Home {
+	color: white;
+}
+.Home .Background{
+	z-index: -1;
+	background:black;
+	position:absolute;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	left:0px;
+}

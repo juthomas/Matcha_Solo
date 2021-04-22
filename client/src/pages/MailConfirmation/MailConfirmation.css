@@ -1,8 +1,8 @@
-.Register {
+.MailConfirmation {
 	color: white;
 }
 
-.Register .Background{
+.MailConfirmation .Background{
 	z-index: -1;
 	background:black;
 	position:absolute;
@@ -13,7 +13,7 @@
 }
 
 
-.Register .logoandname {
+.MailConfirmation .logoandname {
 	color: white;
 	position: absolute;
 	left: calc(50% - 131px/2 - 109px);
@@ -22,7 +22,7 @@
 	/* width:100%; */
 }
 
-.Register .wolflogo{
+.MailConfirmation .wolflogo{
 	/* top: 0; */
 	/* left: 0px; */
 	/* position:relative; */
@@ -30,7 +30,25 @@
 	width:100px;
 }
 
-.Register .apptext {
+.MailConfirmation .indiceMessage {
+	top: 180px;
+	position: absolute;
+	left: calc(50% - 100px/2 - 100px);
+	text-align: center;
+	font-family: "Vollkorn SC";
+	line-height: 70px;
+	font-size: 32px;
+	width: 300px;
+}
+
+.MailConfirmation .indiceMessage p{
+	margin-bottom: 20px;
+}
+
+
+
+
+.MailConfirmation .apptext {
 	padding-top: 40px;
 	font-family: "Vollkorn SC";
 	font-style: normal;
@@ -42,13 +60,7 @@
 	line-height: 60px;
 }
 
-
-
-.Register .spacer {
-	height: 30px;
-}
-
-.Register .buttons {
+.MailConfirmation .buttons {
 	/* left: 100px; */
 	left: 50px;
 	right: 50px;
@@ -59,6 +71,3 @@
 	font-family: "Vollkorn SC";
 	position: absolute;
 }
-
-
-
