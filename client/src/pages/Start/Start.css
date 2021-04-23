@@ -47,16 +47,26 @@ body {
 }
 
 .Start .wolflogo{
+	top: 0px;
+	left: 0px;
+	position:absolute;
+	float:left;
+	/* width:150px;
+	height:150px; */
+}
+
+.Start .wolflogo img{
 	/* top: 0; */
 	/* left: 0px; */
 	/* position:relative; */
-	float:left;
-	width:100px;
+	/* float:left; */
+	width:120px;
+	height:120px;
 }
 
 .Start .apptext {
 	/* float:right; */
-	padding-top: 40px;
+	padding-top: 45px;
 	/* position:relative; */
 	/* left:40%; */
 	/* width:40%; */
@@ -65,7 +75,7 @@ body {
 	font-style: normal;
 	font-weight: normal;
 	width: 250px;
-	margin-left:100px;
+	margin-left:120px;
 	text-align: center;
 }
 

@@ -12,19 +12,15 @@
 }
 
 .Navbar button{
-	/* position: absolute; */
-	/* bottom: 10px; */
-	/* margin: 15px 50px 0px 50px; */
 	height: 60px;
 	width: 60px;
-	background-color: grey;
-	/* border: 0; */
-	/* all: unset */
+	background-color: #F2F2F2;
 	border:none;
 }
 
 .Navbar button:hover{
 	cursor: pointer;
+	filter: invert();
 }
 
 .Navbar button:focus{
@@ -33,6 +29,10 @@
 	/* cursor: pointer; */
 }
 
-.Navbar image{
-	fill: green;
+.Navbar img{
+	/* opacity: 80%; */
+	height: 44px;
+	width: 44px;
+	filter:invert() brightness(90%) 
+	/* fill: green; */
 }

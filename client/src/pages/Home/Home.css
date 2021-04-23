@@ -1,5 +1,11 @@
 .Home {
 	color: white;
+	top:0px;
+	right:0px;
+	bottom:90px;
+	left:0px;
+	position:absolute;
+
 }
 .Home .Background{
 	z-index: -1;
@@ -9,4 +15,54 @@
 	right:0px;
 	bottom:0px;
 	left:0px;
+}
+
+.Home .ReactionBar {
+	z-index: 500;
+	margin: 0 auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 350px;
+	bottom: 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content:space-around;
+}
+
+.Home .ReactionBar button{
+	height: 60px;
+	width: 60px;
+	background-color: #F2F2F2;
+	border:none;
+	box-shadow:
+		0 1px 1px rgba(0,0,0,0.15),
+		0 8px 0 -3px rgb(124, 124, 124);
+
+}
+
+.Home .ReactionBar button:focus{
+	border: none;
+	outline: none;
+	/* cursor: pointer; */
+}
+
+.Home .ReactionBar  button:hover{
+	cursor: pointer;
+	filter: invert();
+}
+
+.Home .CurrentMatch{
+	margin: 0 auto;
+	position: absolute;
+	bottom: 240px;
+	left: 0;
+	right: 0;
+	background-color: red;
+	height: 400px;
+	width: 100%;
+}
+
+.Home .CurrentMatch:hover{
+	background-color: blueviolet;
 }

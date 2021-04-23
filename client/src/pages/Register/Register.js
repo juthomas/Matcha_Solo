@@ -1,21 +1,21 @@
-import React, {useState} from 'react'
+import React from 'react'
 import "./Register.css"
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
-import axios from 'axios'
+// import axios from 'axios'
 
 function Register() {
 
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+	// const [username, setUsername] = useState("");
+	// const [password, setPassword] = useState("");
 
-	const register = () => {
-		console.log("click");
-		axios.post("http://localhost:3001/user/register", 
-		{username: username, password: password})
-		.then((response) => {console.log(response)});
-	}
+	// const register = () => {
+	// 	console.log("click");
+	// 	axios.post("http://localhost:3001/user/register", 
+	// 	{username: username, password: password})
+	// 	.then((response) => {console.log(response)});
+	// }
 
 
 	return (
@@ -23,7 +23,7 @@ function Register() {
 			<div className="Background"/>
 			<div className="logoandname" >
 				<div className="wolflogo" >
-					<img src={process.env.PUBLIC_URL + "/img/wolf_logo.png"} alt="wolfLogo" />
+					<img src={process.env.PUBLIC_URL + "/img/wolf_logo_1.svg"} alt="wolfLogo" />
 				</div>
 				<div className="apptext">Meater</div>
 			</div>

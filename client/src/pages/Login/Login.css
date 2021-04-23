@@ -38,20 +38,17 @@
 }
 
 .Login .wolflogo{
-	/* top: 0; */
-	/* left: 0px; */
-	/* position:relative; */
 	float:left;
 	width:100px;
 }
 
+.Login .wolflogo img{
+	width: 120px;
+	height: 120px;
+}
+
 .Login .apptext {
-	/* float:right; */
 	padding-top: 40px;
-	/* position:relative; */
-	/* left:40%; */
-	/* width:40%; */
-	/* vertical-align: top; */
 	font-family: "Vollkorn SC";
 	font-style: normal;
 	font-weight: normal;
@@ -94,5 +91,3 @@
 	font-family: "Vollkorn SC";
 	position: absolute;
 }
-
-

@@ -22,7 +22,7 @@ function App() {
 				<Route path="/mailconfirmation" exact render={() => <MailConfirmation/>}/>
 				<Route path="/resetcredentials" exact render={() => <ResetCredentials/>}/>
 				<Route path="/setpassword" exact render={() => <SetPassword/>}/>
-				<Route path="/loggedin"  render={() => <Navbar/>}></Route>
+				<Route path="/loggedin"  render={() => <Navbar highlight="1"/>}></Route>
 				<Route path="/loggedin/home" exact render={() => <Home/>}/>
 				{/* 
 				<Route path="/upload" exact render={() => <Upload/>}/>

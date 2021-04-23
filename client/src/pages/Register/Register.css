@@ -30,6 +30,11 @@
 	width:100px;
 }
 
+.Register .wolflogo img{
+	width: 120px;
+	height: 120px;
+}
+
 .Register .apptext {
 	padding-top: 40px;
 	font-family: "Vollkorn SC";

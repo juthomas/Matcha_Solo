@@ -13,7 +13,7 @@ function Start() {
 			</div>
 			<div className="logoandname" >
 				<div className="wolflogo" >
-					<img src={process.env.PUBLIC_URL + "/img/wolf_logo.png"} alt="wolfLogo" />
+					<img src={process.env.PUBLIC_URL + "/img/wolf_logo_1.svg"} alt="wolfLogo" />
 				</div>
 				<div className="apptext">
 					<div className="appname">Meater</div>
