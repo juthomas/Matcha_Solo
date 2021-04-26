@@ -7,6 +7,7 @@
 	/* height: 90px; */
 	display: flex;
 	flex-direction: row;
+	z-index: 10;
 	justify-content:space-between;
 	padding: 15px 30px 15px 30px;
 }

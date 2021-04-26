@@ -36,7 +36,7 @@ function SwipeCard() {
 	}
 
 
-	var numberOfProfiles = 100;
+	var numberOfProfiles = 10;
 
 	const items = []
 	window.numOfCards = numberOfProfiles;
