@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import "./SwipeCard.css"
 import $ from "jquery"
+import Axios from "axios"
+
 
 function SwipeCard() {
 
-	// useEffect(() => {
-	// 	const script = document.createElement('script');
-
-	// 	script.src = process.env.PUBLIC_URL + "/scripts/swipe.js";
-	// 	script.async = true;
-
-	// 	document.body.appendChild(script);
-
-	// 	return () => {
-	// 		document.body.removeChild(script);
-	// 	}
-	// }, []);
-
-
-	// const numberOfProfiles = 10;
 	const [numberOfProfiles, setNumberOfProfiles] = useState(10);
+	// var numberOfProfiles = 10;
+	// const [profilesDatas, setProfilesDatas] = useState([]);
+	var profilesDatas = useRef([]);
+	var dbOffset = useRef(0);
+	const dbLimit = 5;
+	const [clicksNumber, setClicksNumber] = useState(0);
 
-	const items = []
+
+	var items = []
 	window.numOfCards = numberOfProfiles;
 	for (var i = 0; i < numberOfProfiles; i++) {
 		items.push(<div key={i} className="demo__card">
@@ -37,6 +31,50 @@ function SwipeCard() {
 		<div className="demo__card__drag"></div>
 	</div>)
 	}
+	console.log(items);
+
+	console.log("profiles data :",profilesDatas.current);
+	items = profilesDatas.current.map((val, key) => 
+	{
+		return (
+			<div key={key} className="demo__card">
+			<div className="demo__card__top brown">
+			<div className="demo__card__img"></div>
+			<p className="demo__card__name">Boy {val.Name}</p>
+			</div>
+			<div className="demo__card__btm">
+				<p className="demo__card__we">Whatever</p>
+			</div>
+			<div className="demo__card__choice m--reject"></div>
+			<div className="demo__card__choice m--like"></div>
+			<div className="demo__card__drag"></div>
+		</div>
+		)
+	})
+
+
+	useEffect(() => {
+
+		Axios.post("http://localhost:3001/get_profiles", 
+		{offset: dbOffset.current, limit: dbLimit})
+		.then((response) => {console.log(response)
+		if (dbLimit > response.data.length)
+		{
+			dbOffset.current = 0;
+		}
+		else
+		{
+			dbOffset.current += dbLimit;
+		}
+		//let responseData = response.data;
+		//setProfilesDatas(response.data);
+		profilesDatas.current = response.data;
+		console.log(response.data) 
+		console.log(profilesDatas.current)
+		setNumberOfProfiles(response.data.length)
+		});
+
+	}, [clicksNumber])
 
 	useEffect(() => {
 		console.log("In :", numberOfProfiles)
@@ -82,6 +120,8 @@ function SwipeCard() {
 
 						cardsCounter = 0;
 						$(".demo__card").removeClass("below");
+						setClicksNumber(c => c + 1);
+						
 					}
 				}, 300);
 			}
@@ -128,9 +168,7 @@ function SwipeCard() {
 		});
 		return () => {
 			console.log("exit :", numberOfProfiles)
-			// $(document).detach();
 			$(document).off();
-			// $(document).
 		}
 	}, [numberOfProfiles])
 
@@ -145,7 +183,7 @@ function SwipeCard() {
 					{/* <p className="demo__tip">Swipe left or right</p> */}
 				</div>
 		</div>
-		<button style={{zIndex:500, position:"fixed"}} onClick={()=>{ setNumberOfProfiles(numberOfProfiles + 1); console.log(numberOfProfiles)}}>Useless</button>
+		<button style={{zIndex:500, position:"fixed"}} onClick={()=>{ setClicksNumber(clicksNumber + 1); console.log(clicksNumber)}}>Useless</button>
 		</>
 	)
 }
