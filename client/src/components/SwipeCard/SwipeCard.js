@@ -39,8 +39,10 @@ function SwipeCard() {
 		return (
 			<div key={key} className="demo__card">
 			<div className="demo__card__top brown">
-			<div className="demo__card__img"></div>
-			<p className="demo__card__name">Boy {val.Name}</p>
+			<div className="demo__card__img">
+				<img style={{height:"100%", }} src="https://thispersondoesnotexist.com/image"></img>
+			</div>
+			<p className="demo__card__name">Boy {val.name}</p>
 			</div>
 			<div className="demo__card__btm">
 				<p className="demo__card__we">Whatever</p>
@@ -68,10 +70,19 @@ function SwipeCard() {
 		}
 		//let responseData = response.data;
 		//setProfilesDatas(response.data);
-		profilesDatas.current = response.data;
+		
+		// profilesDatas.current = response.data;
+		// profilesDatas.current = profilesDatas.current.splice(profilesDatas.current.length -1, profilesDatas.current.length);
+		profilesDatas.current = profilesDatas.current.splice(0, 1);
+		
+		// profilesDatas.current = profilesDatas.current.concat(response.data)
+		profilesDatas.current = response.data.concat(profilesDatas.current)
+
+
+
 		console.log(response.data) 
 		console.log(profilesDatas.current)
-		setNumberOfProfiles(response.data.length)
+		setNumberOfProfiles(profilesDatas.current.length)
 		});
 
 	}, [clicksNumber])
@@ -105,8 +116,11 @@ function SwipeCard() {
 	
 			if (pullDeltaX >= decisionVal) {
 				$card.addClass("to-right");
+				console.log(cardsCounter, " : Liked")
 			} else if (pullDeltaX <= -decisionVal) {
 				$card.addClass("to-left");
+				console.log(cardsCounter, " : Disliked")
+
 			}
 	
 			if (Math.abs(pullDeltaX) >= decisionVal) {
@@ -115,12 +129,19 @@ function SwipeCard() {
 				setTimeout(function () {
 					$card.addClass("below").removeClass("inactive to-left to-right");
 					cardsCounter++;
+					if (cardsCounter === numberOfProfiles - 1)
+					{
+						$(".demo__card").removeClass("below");
+						
+						setClicksNumber(c => c + 1);
+						// cardsCounter = 0;
+
+					}
 					if (cardsCounter === numberOfProfiles) {
 						console.log("Equal :", numberOfProfiles)
 
 						cardsCounter = 0;
 						$(".demo__card").removeClass("below");
-						setClicksNumber(c => c + 1);
 						
 					}
 				}, 300);

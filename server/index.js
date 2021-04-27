@@ -9,6 +9,9 @@ app.use(express.json());
 const getProfilesRoute = require("./routes/getProfiles");
 app.use("/get_profiles", getProfilesRoute);
 
+const createProfilesRoute = require("./routes/createProfiles");
+app.use("/create_profiles", createProfilesRoute);
+
 // const userRoute = require("./routes/User");
 // app.use("/user", userRoute);
 
