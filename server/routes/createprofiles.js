@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
 			"	lat :", ((Math.random() * 120) - 40),
 			"	long :", ((Math.random() * 360) - 180));
 		profileName = currentProfile.fields.prenom;
-		profileGender = currentProfile.fields.genre;
+		profileGender = currentProfile.fields.genre === "Masculin" ? "Male" : currentProfile.fields.genre;
 		profileLocation = null;
 		profilePicture = null;
 		profileOld = Math.floor(Math.random() * 12) + 18;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import "./SwipeCard.css"
 import $ from "jquery"
 import Axios from "axios"
-
+import reactElementToJSXString from 'react-element-to-jsx-string';
 
 function SwipeCard() {
 
@@ -13,50 +13,71 @@ function SwipeCard() {
 	var dbOffset = useRef(0);
 	const dbLimit = 5;
 	const [clicksNumber, setClicksNumber] = useState(0);
-
-
 	var items = []
-	window.numOfCards = numberOfProfiles;
-	for (var i = 0; i < numberOfProfiles; i++) {
-		items.push(<div key={i} className="demo__card">
-		<div className="demo__card__top brown">
-		<div className="demo__card__img"></div>
-		<p className="demo__card__name">Boy {i}</p>
-		</div>
-		<div className="demo__card__btm">
-			<p className="demo__card__we">Whatever</p>
-		</div>
-		<div className="demo__card__choice m--reject"></div>
-		<div className="demo__card__choice m--like"></div>
-		<div className="demo__card__drag"></div>
-	</div>)
-	}
-	console.log(items);
+	const [itemsState, setItemsState] = useState([]);
 
-	console.log("profiles data :",profilesDatas.current);
-	items = profilesDatas.current.map((val, key) => 
-	{
-		return (
-			<div key={key} className="demo__card">
-			<div className="demo__card__top brown">
-			<div className="demo__card__img">
-				<img style={{height:"100%", }} src="https://thispersondoesnotexist.com/image"></img>
-			</div>
-			<p className="demo__card__name">Boy {val.name}</p>
-			</div>
-			<div className="demo__card__btm">
-				<p className="demo__card__we">Whatever</p>
-			</div>
-			<div className="demo__card__choice m--reject"></div>
-			<div className="demo__card__choice m--like"></div>
-			<div className="demo__card__drag"></div>
-		</div>
-		)
-	})
+
+	// window.numOfCards = numberOfProfiles;
+	// for (var i = 0; i < numberOfProfiles; i++) {
+	// 	items.push(<div key={i} className="demo__card">
+	// 	<div className="demo__card__top brown">
+	// 	<div className="demo__card__img"></div>
+	// 	<p className="demo__card__name">Boy {i}</p>
+	// 	</div>
+	// 	<div className="demo__card__btm">
+	// 		<p className="demo__card__we">Whatever</p>
+	// 	</div>
+	// 	<div className="demo__card__choice m--reject"></div>
+	// 	<div className="demo__card__choice m--like"></div>
+	// 	<div className="demo__card__drag"></div>
+	// </div>)
+	// }
+	// console.log(items);
+
 
 
 	useEffect(() => {
+		getNewProfiles()
+	}, [])
 
+	function refreshProfilesItems() {
+		console.log("beg reload");
+		console.log("reload datas", profilesDatas.current);
+	
+		console.log("profiles data :",profilesDatas.current);
+		items = profilesDatas.current.map((val, key) => 
+		{
+			return (
+				<div key={key} className="demo__card">
+				<div className="demo__card__top brown">
+				<div className="demo__card__img">
+					<img style={{height:"100%", }} src="https://thispersondoesnotexist.com/image"></img>
+				</div>
+				<p className="demo__card__name">Boy {val.name}</p>
+				</div>
+				<div className="demo__card__btm">
+					<p className="demo__card__we">Whatever</p>
+				</div>
+				<div className="demo__card__choice m--reject"></div>
+				<div className="demo__card__choice m--like"></div>
+				<div className="demo__card__drag"></div>
+			</div>
+			)
+		})
+		items = items.reverse()  
+		if (items.length > 0)
+		{
+			for (var u = 0; u < items.length; u++)
+			{
+				// console.log("reload datas items", reactElementToJSXString(items[u]));
+			}
+		}
+		
+		console.log("reload");
+		setItemsState(items);
+	}
+
+	function getNewProfiles(){
 		Axios.post("http://localhost:3001/get_profiles", 
 		{offset: dbOffset.current, limit: dbLimit})
 		.then((response) => {console.log(response)
@@ -68,24 +89,44 @@ function SwipeCard() {
 		{
 			dbOffset.current += dbLimit;
 		}
-		//let responseData = response.data;
-		//setProfilesDatas(response.data);
-		
-		// profilesDatas.current = response.data;
-		// profilesDatas.current = profilesDatas.current.splice(profilesDatas.current.length -1, profilesDatas.current.length);
-		profilesDatas.current = profilesDatas.current.splice(0, 1);
-		
-		// profilesDatas.current = profilesDatas.current.concat(response.data)
-		profilesDatas.current = response.data.concat(profilesDatas.current)
 
-
+		profilesDatas.current = profilesDatas.current.splice(profilesDatas.current.length -1, profilesDatas.current.length);
+		console.log("mid current profile data :", profilesDatas.current)
+		
+		profilesDatas.current = profilesDatas.current.concat(response.data)
 
 		console.log(response.data) 
 		console.log(profilesDatas.current)
 		setNumberOfProfiles(profilesDatas.current.length)
+		refreshProfilesItems()
 		});
+	}
 
-	}, [clicksNumber])
+	// useEffect(() => {
+
+	// 	Axios.post("http://localhost:3001/get_profiles", 
+	// 	{offset: dbOffset.current, limit: dbLimit})
+	// 	.then((response) => {console.log(response)
+	// 	if (dbLimit > response.data.length)
+	// 	{
+	// 		dbOffset.current = 0;
+	// 	}
+	// 	else
+	// 	{
+	// 		dbOffset.current += dbLimit;
+	// 	}
+
+	// 	profilesDatas.current = profilesDatas.current.splice(profilesDatas.current.length -1, profilesDatas.current.length);
+	// 	console.log("mid current profile data :", profilesDatas.current)
+		
+	// 	profilesDatas.current = profilesDatas.current.concat(response.data)
+
+	// 	console.log(response.data) 
+	// 	console.log(profilesDatas.current)
+	// 	setNumberOfProfiles(profilesDatas.current.length)
+	// 	});
+
+	// }, [clicksNumber])
 
 	useEffect(() => {
 		console.log("In :", numberOfProfiles)
@@ -131,10 +172,13 @@ function SwipeCard() {
 					cardsCounter++;
 					if (cardsCounter === numberOfProfiles - 1)
 					{
+						console.log("Reload js :", cardsCounter, " : ", numberOfProfiles)
+
 						$(".demo__card").removeClass("below");
 						
 						setClicksNumber(c => c + 1);
-						// cardsCounter = 0;
+						getNewProfiles()
+						cardsCounter = 0;
 
 					}
 					if (cardsCounter === numberOfProfiles) {
@@ -192,14 +236,13 @@ function SwipeCard() {
 			$(document).off();
 		}
 	}, [numberOfProfiles])
-
 	return (
 		<>
 		<div className="SwipeCard">
 				{/* <header className="demo__header"></header> */}
 				<div className="demo__content">
 					<div className="demo__card-cont">
-						{items}
+						{itemsState}
 					</div>
 					{/* <p className="demo__tip">Swipe left or right</p> */}
 				</div>
