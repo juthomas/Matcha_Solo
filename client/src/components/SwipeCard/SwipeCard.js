@@ -253,7 +253,6 @@ function SwipeCard() {
 		}
 	}, [numberOfProfiles, getNewProfiles])
 	return (
-		<>
 			<div className="SwipeCard">
 				{/* <header className="demo__header"></header> */}
 				<div className="demo__content">
@@ -263,8 +262,7 @@ function SwipeCard() {
 					{/* <p className="demo__tip">Swipe left or right</p> */}
 				</div>
 			</div>
-			<button style={{ zIndex: 500, position: "fixed" }} onClick={() => {/*  setClicksNumber(clicksNumber + 1); console.log(clicksNumber)  */ }}>Useless</button>
-		</>
+
 	)
 }
 

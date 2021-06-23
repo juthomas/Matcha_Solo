@@ -9,6 +9,7 @@ import ResetCredentials from "./pages/ResetCredentials/ResetCredentials"
 import SetPassword from "./pages/SetPassword/SetPassword"
 import Home from "./pages/Home/Home"
 import Messages from "./pages/Messages/Messages"
+import React from 'react'
 // import Upload from "./pages/Upload/Upload"
 
 function App() {
