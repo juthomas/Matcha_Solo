@@ -44,9 +44,12 @@ router.get('/', (req, res) => {
 		profileOld = Math.floor(Math.random() * 12) + 18;
 		latitude = ((Math.random() * 120) - 40);
 		longitude = ((Math.random() * 360) - 180);
+		profileMail = currentProfile.fields.prenom + "@gmail.com";
+		profilePassword = currentProfile.fields.prenom + "MDP";
 
-		db.query("INSERT INTO Users (name, gender, location, picture, old, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?);",
-			[profileName, profileGender, profileLocation, profilePicture, profileOld, latitude, longitude],
+
+		db.query("INSERT INTO Users (mail, password, name, gender, location, picture, old, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+			[profileMail, profilePassword, profileName, profileGender, profileLocation, profilePicture, profileOld, latitude, longitude],
 			(err, results) => {
 				if (err) {
 					console.log(err);

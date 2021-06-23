@@ -8,9 +8,9 @@ function Home() {
 			<div className="Background"/>
 
 			Home 
-			<div className="CurrentMatch">
+			{/* <div className="CurrentMatch"> */}
 				<SwipeCard/>
-			</div>
+			{/* </div> */}
 			<div className="ReactionBar">
 				<button>
 				<img alt="like_icon" src={process.env.PUBLIC_URL + "/img/like_icon.svg"} />

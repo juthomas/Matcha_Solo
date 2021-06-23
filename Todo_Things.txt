@@ -1,0 +1,21 @@
+uuid npm lib to create random uid
+-> Use it to store a uuid from login page (verified by password)
+
+
+Check if mail already exist in DB
+
+
+Sql relationships (tab "Relationships")
+
+ user_id | partner_id | relation
+---------|-----------|----------
+    1    |     2     | friends  
+    1    |     3     | friends++
+    1    |     4     | friends  
+    2    |     1     | friends  
+    2    |     3     | friends  
+         |           |          
+         |           |          
+         |           |          
+         |           |          
+         |           |          

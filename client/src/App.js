@@ -8,6 +8,7 @@ import MailConfirmation from "./pages/MailConfirmation/MailConfirmation"
 import ResetCredentials from "./pages/ResetCredentials/ResetCredentials"
 import SetPassword from "./pages/SetPassword/SetPassword"
 import Home from "./pages/Home/Home"
+import Messages from "./pages/Messages/Messages"
 // import Upload from "./pages/Upload/Upload"
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
 				<Route path="/setpassword" exact render={() => <SetPassword/>}/>
 				<Route path="/loggedin"  render={() => <Navbar highlight="1"/>}></Route>
 				<Route path="/loggedin/home" exact render={() => <Home/>}/>
+				<Route path="/loggedin/messages" exact render={() => <Messages/>}/>
 				{/* 
 				<Route path="/upload" exact render={() => <Upload/>}/>
 				<Route path="/register" exact render={() => <Register/>}/>

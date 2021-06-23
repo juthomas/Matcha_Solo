@@ -52,7 +52,7 @@
 	filter: invert();
 }
 
-.Home .CurrentMatch{
+/* .Home .CurrentMatch{
 	margin: 0 auto;
 	position: absolute;
 	bottom: 240px;
@@ -65,4 +65,4 @@
 
 .Home .CurrentMatch:hover{
 	background-color: blueviolet;
-}
+} */

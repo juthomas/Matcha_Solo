@@ -1,0 +1,9 @@
+{
+    "html.format.enable": false,
+    "typescript.format.enable": false,
+    "json.format.enable": false,
+    "javascript.format.enable": false,
+    "[json]": {
+        "editor.formatOnSave": false   
+    }
+}

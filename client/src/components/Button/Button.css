@@ -32,7 +32,7 @@
 	);
 }
 
-.ButtonComponent .Button:hover{
+.ButtonComponent .ButtonComponent:hover{
 	cursor: pointer;
 	background-color: lightgrey;
 }
