@@ -5,6 +5,7 @@ import Start from "./pages/Start/Start"
 import Navbar from "./components/Navbar/Navbar"
 import Login from "./pages/Login/Login"
 import MailConfirmation from "./pages/MailConfirmation/MailConfirmation"
+import MailLink from "./pages/MailLink/MailLink"
 import ResetCredentials from "./pages/ResetCredentials/ResetCredentials"
 import SetPassword from "./pages/SetPassword/SetPassword"
 import Home from "./pages/Home/Home"
@@ -22,6 +23,7 @@ function App() {
 				<Route path="/login" exact render={() => <Login/>}/>
 				<Route path="/register" exact render={() => <Register/>}/>
 				<Route path="/mailconfirmation" exact render={() => <MailConfirmation/>}/>
+				<Route path="/maillink/:id" exact render={() => <MailLink/>}/>
 				<Route path="/resetcredentials" exact render={() => <ResetCredentials/>}/>
 				<Route path="/setpassword" exact render={() => <SetPassword/>}/>
 				<Route path="/loggedin"  render={() => <Navbar highlight="1"/>}></Route>

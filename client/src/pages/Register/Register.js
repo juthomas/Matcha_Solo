@@ -1,21 +1,42 @@
-import React from 'react'
+// import React from 'react'
 import "./Register.css"
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
+import Axios from 'axios'
+import React, { useState } from 'react'
+
+
 // import axios from 'axios'
 
 function Register() {
+	const [login, setLogin] = useState("");
+	const [firstname, setFirstname] = useState("");
+	const [lastname, setLastname] = useState("");
+	const [mail, setMail] = useState('');
+	const [password, setPassword] = useState('');
 
-	// const [username, setUsername] = useState("");
-	// const [password, setPassword] = useState("");
-
-	// const register = () => {
-	// 	console.log("click");
-	// 	axios.post("http://localhost:3001/user/register", 
-	// 	{username: username, password: password})
-	// 	.then((response) => {console.log(response)});
-	// }
+	const register = () => {
+		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+		console.log("Back Host :" + urlPrefix);
+		// console.log("mail : :" + mail);
+		Axios.post(urlPrefix + "/user/register", {login : login,
+												firstname : firstname,
+												lastname : lastname,
+												mail : mail,
+												password : password})
+		.then((response) => {
+			// console.log(response);
+			// if (response.data.loggedIn)
+			// {
+			// 	// localStorage.setItem("loggedIn", true);
+			// 	setLoggedIn(true);
+			// 	// localStorage.setItem("mail", response.data.mail);
+			// 	setLocalMail(response.data.mail);
+			// 	history.push("/loggedin/home");
+			// }
+		})
+	}
 
 
 	return (
@@ -33,17 +54,18 @@ function Register() {
 				<button onClick={register}>Register</button>
 			</div> */}
 			<div className="buttons" >
-				<Input placeholder="Login"/>
+				<Input placeholder="Login" onChange={(event) => {setLogin(event.target.value)}}/>
 				<Spacer height="30px"/>
-				<Input placeholder="Firstname"/>
+				<Input placeholder="Firstname" onChange={(event) => {setFirstname(event.target.value)}}/>
 				<Spacer height="30px"/>
-				<Input placeholder="Lastname"/>
+				<Input placeholder="Lastname" onChange={(event) => {setLastname(event.target.value)}}/>
 				<Spacer height="30px"/>
-				<Input placeholder="Mail"/>
+				<Input placeholder="Mail" onChange={(event) => {setMail(event.target.value)}}/>
 				<Spacer height="30px"/>
-				<Input placeholder="Password" type="password"/>
+				<Input placeholder="Password" type="password" onChange={(event) => {setPassword(event.target.value)}}/>
 				<Spacer height="60px"/>
-				<Button text="Register" onClick="/mailconfirmation"/>
+				{/* <Button text="Register" onClick="/mailconfirmation"/> */}
+				<button className="ButtonStyle" onClick={register}>Register</button>
 			</div>
 		</div>
 	)
