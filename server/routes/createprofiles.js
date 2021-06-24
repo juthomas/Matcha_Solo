@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const nameBase = require('./../datas/prenoms.json')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 function nameIsUnique(item, position, array) {
 	pos = array.map(function (e) { return e.fields.prenom; }).indexOf(item.fields.prenom);
@@ -18,7 +20,7 @@ function sortByName(a, b) {
 	return 0;
 }
 //http://localhost:3001/create_profiles
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 
 	db.query("DELETE FROM Users;",
 			[],
@@ -41,31 +43,7 @@ router.get('/', (req, res) => {
 	// }
 	var lastname = ""
 	// var lastnameI = Math.floor(Math.random() * 7);
-	switch (Math.floor(Math.random() * 7)) {
-		case 0:
-			lastname = "Lundi";
-			break;
-		case 1:
-			lastname = "Mardi";
-			break;
-		case 2:
-			lastname = "Mercredi";
-			break;
-		case 3:
-			lastname = "Jeudi";
-			break;
-		case 4:
-			lastname = "Vendredi";
-			break;
-		case 5:
-			lastname = "Samedi";
-			break;
-		case 6:
-			lastname = "Dimanche";
-			break;
-		default:
-			lastname = "Unnamed";
-	}
+
 
 
 	for (var i = 0; i < 20 && i < result.length; i++) {
@@ -109,8 +87,7 @@ router.get('/', (req, res) => {
 		latitude = ((Math.random() * 120) - 40);
 		longitude = ((Math.random() * 360) - 180);
 		profileMail = currentProfile.fields.prenom + "@gmail.com";
-		profilePassword = currentProfile.fields.prenom + "MDP";
-
+		profilePassword = await bcrypt.hash(currentProfile.fields.prenom + "MDP", saltRounds);
 
 		db.query("INSERT INTO Users (mail, password, name, username, lastname, gender, location, picture, old, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
 			[profileMail, profilePassword, profileName, profileUsername, profileLastname, profileGender, profileLocation, profilePicture, profileOld, latitude, longitude],

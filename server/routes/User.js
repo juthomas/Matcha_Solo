@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require("../config/db");
 const nodemailer = require('nodemailer')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 // const mysql2 = require('mysql2/promise');
 
 // The credentials for the email account you want to send mail from. 
@@ -18,19 +20,20 @@ const mailCredentials = {
 }
 
 
-router.post("/login", (req, res) => {
+router.post("/login", async(req, res) => {
 	console.log("Login page");
 	const mail = req.body.mail;
 	const password = req.body.password;
 	
 	// console.log("Wsh mail : " + mail);
 	db.query("SELECT * FROM Users WHERE mail = ?", [mail],
-	(err, results) => {
+	async (err, results) => {
 		if (err) {
 			console.log(err);
 		}
 		if (results.length) {
-			if (results[0].password === password) {
+			const comparaison = await bcrypt.compare(password, results[0].password);
+			if (comparaison) {
 				console.log(results[0])
 				if (results[0].mail_verified === 0)
 				{
@@ -130,7 +133,7 @@ function sendMail(urlPrefix, mail, login, id, code)
 	  });
 }
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
 	console.log("register button");
 
 	// console.log(req.protocol)
@@ -142,7 +145,7 @@ router.post("/register", (req, res) => {
 	const firsname = req.body.firstname;
 	const lastname = req.body.lastname;
 	const mail = req.body.mail;
-	const password = req.body.password;
+	const password = await bcrypt.hash(req.body.password, saltRounds); ;
 	var id = 0;
 	var code = Math.floor(Math.random() * 8888) + 1111;
 
