@@ -27,24 +27,29 @@ body {
 }
 
 .wrapper {
-  position: relative;
-  left: 50%;
-  width: var(--wrapper);
-  height: 800px;
-  transform: translate(-50%, 0);
+  top:0px;
+
+  right:0px;
+  left: 0px;
+  width: 100%;
+  height: 90%;
+  position: absolute;
+  /* background-color: red; */
+  z-index: -1;
 }
 
 .container {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  height: 75%;
-  background-color: var(--white);
-  transform: translate(-50%, -50%);
+  justify-content:left;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  /* background-color: red; */
+  display:flex;
 }
+
 .container .left {
-  float: left;
   width: 37.6%;
   height: 100%;
   border: 1px solid var(--light);
@@ -56,6 +61,7 @@ body {
   height: 96px;
   padding: 29px;
 }
+
 .container .left .top:after {
   position: absolute;
   bottom: 0;
@@ -68,8 +74,7 @@ body {
   transform: translate(-50%, 0);
 }
 .container .left input {
-  float: left;
-  width: 188px;
+  width: 100%;
   height: 42px;
   padding: 0 15px;
   border: 1px solid var(--light);
@@ -81,25 +86,17 @@ body {
 .container .left input:focus {
   outline: none;
 }
-.container .left a.search {
-  display: block;
-  float: left;
-  width: 42px;
-  height: 42px;
-  margin-left: 10px;
-  border: 1px solid var(--light);
-  background-color: var(--blue);
-  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/name-type.png");
-  background-repeat: no-repeat;
-  background-position: top 12px left 14px;
-  border-radius: 50%;
-}
 .container .left .people {
   margin-left: -1px;
   border-right: 1px solid var(--light);
   border-left: 1px solid var(--light);
   width: calc(100% + 2px);
+  max-height: 100%;
+  overflow-y: auto;
+  display:flex;
+  flex-direction: column;
 }
+
 .container .left .people .person {
   position: relative;
   width: 100%;
@@ -165,13 +162,14 @@ body {
   color: var(--white);
   background: transparent;
 }
+
 .container .left .people .person.active:after, .container .left .people .person:hover:after {
   display: none;
 }
 .container .right {
   position: relative;
-  float: left;
   width: 62.4%;
+  background-color: var(--white);
   height: 100%;
 }
 .container .right .top {
@@ -180,6 +178,7 @@ body {
   padding: 15px 29px;
   background-color: #eceff1;
 }
+
 .container .right .top span {
   font-size: 15px;
   color: var(--grey);
@@ -189,24 +188,33 @@ body {
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
 }
-.container .right .chat {
-    overflow-y: scroll;
-  position: relative;
-  display: none;
-  /* overflow: hidden; */
-  padding: 0 35px 92px;
-  border-width: 1px 1px 1px 0;
-  border-style: solid;
-  border-color: var(--light);
-  height: calc(100% - 48px);
-  justify-content: flex-end;
-  flex-direction: column;
-  /* bottom: 0%; */
-}
-.container .right .chat.active-chat {
-  display: block;
+
+.chatWrap
+{
   display: flex;
+  flex-direction: column-reverse; /* 'column' for start, 'column-reverse' for end */
+  overflow-y: scroll; /* or overflow-y: auto ... */
+  height:80%;
+  /* margin-left: -1px;
+  border-right: 1px solid var(--light);
+  border-left: 1px solid var(--light); */
 }
+
+.container .right .chat {
+  margin-left: -1px;
+  padding: 0 35px 92px;
+  margin-top: 20px;
+  border-width: 1px 1px 1px 0;
+  border-right: 1px solid var(--light);
+  border-left: 1px solid var(--light);
+  width:100%;
+
+}
+
+
+/* .container .right .chat.active-chat {
+  display: flex;
+} */
 .container .right .chat.active-chat .bubble {
   transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);
 }
@@ -276,7 +284,7 @@ body {
 }
 .container .right .write .write-link.attach:before {
   display: inline-block;
-  float: left;
+  /* float: left; */
   width: 20px;
   height: 42px;
   content: "";
@@ -286,7 +294,7 @@ body {
 }
 .container .right .write .write-link.smiley:before {
   display: inline-block;
-  float: left;
+  /* float: left; */
   width: 20px;
   height: 42px;
   content: "";
@@ -296,7 +304,7 @@ body {
 }
 .container .right .write .write-link.send:before {
   display: inline-block;
-  float: left;
+  /* float: left; */
   width: 20px;
   height: 42px;
   margin-left: 11px;
@@ -305,6 +313,7 @@ body {
   background-repeat: no-repeat;
   background-position: center;
 }
+
 .container .right .bubble {
   font-size: 16px;
   position: relative;
