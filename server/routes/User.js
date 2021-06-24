@@ -17,59 +17,105 @@ const mailCredentials = {
 	}
 }
 
+
 router.post("/login", (req, res) => {
 	console.log("Login page");
 	const mail = req.body.mail;
 	const password = req.body.password;
-
+	
 	// console.log("Wsh mail : " + mail);
 	db.query("SELECT * FROM Users WHERE mail = ?", [mail],
-		(err, results) => {
-			if (err) {
-				console.log(err);
-			}
-			if (results.length) {
-				if (results[0].password === password) {
-					res.json({ loggedIn: true, mail: mail });
-				}
-				else {
-					res.json({ loggedIn: false, message: "Bad mail/password" });
-				}
+	(err, results) => {
+		if (err) {
+			console.log(err);
+		}
+		if (results.length) {
+			if (results[0].password === password) {
+				res.json({ loggedIn: true, mail: mail });
 			}
 			else {
-				res.json({ loggedIn: false, message: "mail doesnt exist" });
+				res.json({ loggedIn: false, message: "Bad mail/password" });
 			}
-			console.log(err);
-		});
+		}
+		else {
+			res.json({ loggedIn: false, message: "mail doesnt exist" });
+		}
+		console.log(err);
+	});
 })
 
-function sendMail(urlPrefix, mail, login, id)
+router.post("/maillink", (req, res) => {
+	const id = req.body.id;
+
+	console.log("confirmation id :", id);
+	db.query("UPDATE Users SET mail_verified = 1 WHERE id = ?",[id],
+	(err, results) => {
+		if (err)
+		{
+			console.log(err);
+		}
+		res.send({result: results.affectedRows})
+		console.log(results.affectedRows);
+	});
+})
+
+router.post("/mailconfirmation", (req, res) => {
+	const id = req.body.id;
+	const code = req.body.code;
+
+	console.log("Confirmation")
+
+	db.query("SELECT * FROM Users WHERE id = ?", [id],
+	(err1, results1) => {
+		if (err1)
+		{
+			console.log(err1);
+		}
+		if (results1[0].verification_code === code)
+		{
+			db.query("UPDATE Users SET mail_verified = 1 WHERE id = ?",[id],
+			(err2, results2) => {
+				if (err2)
+				{
+					console.log(err2);
+				}
+				console.log(results2.affectedRows);
+			});
+		}
+
+
+		res.send({result : results1[0].verification_code === code});
+	})
+	// res.send("OK");
+})
+
+function sendMail(urlPrefix, mail, login, id, code)
 {
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
-		  user: process.env.MAIL_USERNAME,
-		  pass: process.env.MAIL_PASSWORD
+			user: process.env.MAIL_USERNAME,
+			pass: process.env.MAIL_PASSWORD
 		}
-	  });
-	  
+	});
+	
 	//   var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-	  var confirmationLink = urlPrefix + "/maillink/" + id;
-
-
-	  var mailOptions = {
+	var confirmationLink = urlPrefix + "/maillink/" + id;
+	
+	
+	var mailOptions = {
 		from: 'Meater',
 		to: mail,
 		subject: 'Registration to Meater ('+login+')',
 		html: `<a href='${confirmationLink}'>
 		Click on this link to confirm your mail
-      		</a> <p>Or enter this code in app : 1234 </p>`,
+		</a> <p>Or enter this code in app : ${code} </p>`,
 		text: 'Click on this link to confirm your mail'
-	  };
-	  
-	  transporter.sendMail(mailOptions, function(error, info){
+	};
+	
+	transporter.sendMail(mailOptions, function(error, info){
 		if (error) {
-		  console.log(error);
+			console.log(error);
 		} else {
 		  console.log('Email sent: ' + info.response);
 		}
@@ -89,7 +135,9 @@ router.post("/register", (req, res) => {
 	const lastname = req.body.lastname;
 	const mail = req.body.mail;
 	const password = req.body.password;
-	
+	var id = 0;
+	var code = Math.floor(Math.random() * 8888) + 1111;
+
 	db.query("SELECT * FROM Users WHERE mail = ?", [mail],
 		(err1, results1) => {
 			if (err1)
@@ -98,8 +146,8 @@ router.post("/register", (req, res) => {
 			}
 			if (!results1.length)
 			{
-				db.query("INSERT INTO Users (username, name, lastname, mail, password) VALUES (?, ?, ?, ?, ?);",
-				[login, firsname, lastname, mail, password],
+				db.query("INSERT INTO Users (username, name, lastname, mail, password, verification_code) VALUES (?, ?, ?, ?, ?, ?);",
+				[login, firsname, lastname, mail, password, code],
 				(err2, results2) => {
 					if (err2)
 					{
@@ -107,8 +155,9 @@ router.post("/register", (req, res) => {
 					}
 					console.log("New id :", results2.insertId);
 					
-					
-					sendMail(urlPrefix, mail, login, results2.insertId);
+					sendMail(urlPrefix, mail, login, results2.insertId, code);
+					res.send({verified: 0, id : results2.insertId});
+
 				}
 				);
 			}
@@ -118,7 +167,12 @@ router.post("/register", (req, res) => {
 				if (results1[0].mail_verified === 0)
 				{
 					console.log("verification mail resended");
-					sendMail(urlPrefix, mail, login, results1[0].id);
+					sendMail(urlPrefix, mail, login, results1[0].id, results1[0].verification_code);
+					res.send({verified: 0, id : results1[0].id});
+				}
+				else
+				{
+					res.send({verified: 1, id : results1[0].id});
 				}
 				// console.log(results1[0].mail_verified);
 
@@ -127,12 +181,11 @@ router.post("/register", (req, res) => {
 
 		}
 	)
-
+	// res.send("OK");
 	// console.log(`Your mail is ${process.env.MAIL_USERNAME}`);
 	// console.log(`Your pass is ${process.env.MAIL_PASSWORD}`);
 	
 
-	  return("");
 
 })
 

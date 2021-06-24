@@ -4,6 +4,8 @@ import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
 import Axios from 'axios'
+import {useHistory} from 'react-router-dom'
+
 import React, { useState } from 'react'
 
 
@@ -15,8 +17,12 @@ function Register() {
 	const [lastname, setLastname] = useState("");
 	const [mail, setMail] = useState('');
 	const [password, setPassword] = useState('');
+	let history = useHistory();
+
 
 	const register = () => {
+		//TODO: verifier fields
+
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		console.log("Back Host :" + urlPrefix);
 		// console.log("mail : :" + mail);
@@ -26,6 +32,18 @@ function Register() {
 												mail : mail,
 												password : password})
 		.then((response) => {
+			console.log("response :", response);
+			if (response.data.verified === 1)
+			{
+				history.push("/loggedin/home");
+			}
+			else
+			{
+				history.push("/mailconfirmation/" + response.data.id);
+			}
+			
+
+			// history.push("/mailconfirmation");
 			// console.log(response);
 			// if (response.data.loggedIn)
 			// {

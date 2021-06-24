@@ -1,10 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./MailConfirmation.css"
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
+import {useParams, useHistory} from "react-router-dom";
+
+import Axios from 'axios'
 
 function MailConfirmation() {
+	let { id } = useParams();
+	const [code, setCode] = useState('');
+	let history = useHistory();
+
+
+	const reqCode = () => {
+		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+		console.log("Back Host :" + urlPrefix);
+		// console.log("mail : :" + mail);
+		Axios.post(urlPrefix + "/user/mailconfirmation", {id : id,
+												code : code})
+		.then((response) => {
+			console.log("response :", response);
+			if (response.data.result === true)
+			{
+				history.push("/loggedin/home");
+			}
+			else
+			{
+				console.log("Bad code");
+			}
+		});
+	}
+
 	return (
 		<div className="MailConfirmation">
 			{/* Mail Confirmation */}
@@ -20,9 +47,10 @@ function MailConfirmation() {
 			enter your confirmation code
 			</div>
 			<div className="buttons" >
-				<Input placeholder="Code"/>
+				<Input placeholder="Code" onChange={(event) => {setCode(event.target.value)}}/>
 				<Spacer height="100px"/>
-				<Button text="Ok" onClick="/"/>
+				{/* <Button text="Ok" onClick="/"/> */}
+				<button className="ButtonStyle" onClick={reqCode}>Ok</button>
 			</div>
 		</div>
 	)
