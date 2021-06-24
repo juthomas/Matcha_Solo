@@ -1,8 +1,7 @@
 uuid npm lib to create random uid
 -> Use it to store a uuid from login page (verified by password)
+-> Local storage for all page + register
 
-
-Check if mail already exist in DB
 
 
 Sql relationships (tab "Relationships")

@@ -33,6 +33,14 @@ function Login() {
 				setLocalMail(response.data.mail);
 				history.push("/loggedin/home");
 			}
+			else
+			{
+				console.log(response.data.message)
+				if (response.data.message === "mail not verified")
+				{
+					history.push("/mailconfirmation/" + response.data.id);
+				}
+			}
 		})
 
 

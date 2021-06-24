@@ -31,7 +31,15 @@ router.post("/login", (req, res) => {
 		}
 		if (results.length) {
 			if (results[0].password === password) {
-				res.json({ loggedIn: true, mail: mail });
+				console.log(results[0])
+				if (results[0].mail_verified === 0)
+				{
+					res.json({ loggedIn: false, message: "mail not verified" , id: results[0].id});
+				}
+				else
+				{
+					res.json({ loggedIn: true, mail: mail });
+				}
 			}
 			else {
 				res.json({ loggedIn: false, message: "Bad mail/password" });
