@@ -17,8 +17,8 @@ function Login() {
 	let history = useHistory();
 	
 
-
-	const login = () => {
+	const onFormSubmit = (e) => {
+		e.preventDefault();
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		console.log("Back Host :" + urlPrefix);
 		// console.log("mail : :" + mail);
@@ -42,8 +42,6 @@ function Login() {
 				}
 			}
 		})
-
-
 	}
 
 	return (
@@ -63,17 +61,19 @@ function Login() {
 
 			</div>
 			<div className="buttons" >
-				<Input placeholder="Mail" onChange={(event) => {setMail(event.target.value)}}/>
-				<Spacer height="30px"/>
-				<Input placeholder="Password" type="password" onChange={(event) => {setPassword(event.target.value)}}/>
-				<Spacer height="30px"/>
-				<div className="forgotPassword">
-					<a href="/resetcredentials">Forgot your password?</a>
-				</div>
-				<Spacer height="60px"/>
-				{/* <Button text="login" onClick="/loggedin/home"/> */}
-				{/* Problem here */}
-				<button className="ButtonStyle" onClick={login}>login</button>
+				<form onSubmit={onFormSubmit}>
+					<Input placeholder="Mail" onChange={(event) => {setMail(event.target.value)}}/>
+					<Spacer height="30px"/>
+					<Input placeholder="Password" type="password" onChange={(event) => {setPassword(event.target.value)}}/>
+					<Spacer height="30px"/>
+					<div className="forgotPassword">
+						<a href="/resetcredentials">Forgot your password?</a>
+					</div>
+					<Spacer height="60px"/>
+					{/* <Button text="login" onClick="/loggedin/home"/> */}
+					{/* Problem here */}
+					<button type="submit" className="ButtonStyle">login</button>
+				</form>
 			</div>
 		</div>
 	)

@@ -145,6 +145,42 @@ router.post("/register", async (req, res) => {
 	const firsname = req.body.firstname;
 	const lastname = req.body.lastname;
 	const mail = req.body.mail;
+
+	if (req.body.login.length < 4)
+	{
+		res.send({error : 1, message : "Login too short"});
+		return ;
+	}
+	
+	if (req.body.firstname.length < 1)
+	{
+		res.send({error : 1, message : "First blank"});
+		return ;
+	}
+	
+	if (req.body.lastname.length < 1)
+	{
+		res.send({error : 1, message : "Lastname blank"});
+		return ;
+	}
+	
+	if (req.body.password.length < 4)
+	{
+		res.send({error : 1, message : "Password too short"});
+		return ;
+	}
+
+	if (!(req.body.mail.indexOf('@') > 0
+		&& req.body.mail.indexOf('@') + 1 < req.body.mail.lastIndexOf('.')
+		&& req.body.mail.lastIndexOf('.') + 2 < req.body.mail.length
+		))
+	{
+		res.send({error : 1, message : "Incorrect mail"});
+		return ;
+	}
+
+
+
 	const password = await bcrypt.hash(req.body.password, saltRounds); ;
 	var id = 0;
 	var code = Math.floor(Math.random() * 8888) + 1111;
@@ -157,20 +193,33 @@ router.post("/register", async (req, res) => {
 			}
 			if (!results1.length)
 			{
-				db.query("INSERT INTO Users (username, name, lastname, mail, password, verification_code) VALUES (?, ?, ?, ?, ?, ?);",
-				[login, firsname, lastname, mail, password, code],
-				(err2, results2) => {
-					if (err2)
+				db.query("SELECT * FROM Users WHERE username = ?", [login],
+				(err3, results3) => {
+					if (!results3.length)
 					{
-						console.log(err2);
-					}
-					console.log("New id :", results2.insertId);
-					
-					sendMail(urlPrefix, mail, login, results2.insertId, code);
-					res.send({verified: 0, id : results2.insertId});
 
-				}
-				);
+						db.query("INSERT INTO Users (username, name, lastname, mail, password, verification_code) VALUES (?, ?, ?, ?, ?, ?);",
+						[login, firsname, lastname, mail, password, code],
+						(err2, results2) => {
+							if (err2)
+							{
+								console.log(err2);
+							}
+							console.log("New id :", results2.insertId);
+							
+							sendMail(urlPrefix, mail, login, results2.insertId, code);
+							res.send({verified: 0, id : results2.insertId});
+							
+						});
+					}
+					else
+					{
+						res.send({error : 1, message : "Login allready taken"});
+					}
+
+				});
+
+
 			}
 			else
 			{
@@ -179,11 +228,11 @@ router.post("/register", async (req, res) => {
 				{
 					console.log("verification mail resended");
 					sendMail(urlPrefix, mail, login, results1[0].id, results1[0].verification_code);
-					res.send({verified: 0, id : results1[0].id});
+					res.send({verified : 0, id : results1[0].id});
 				}
 				else
 				{
-					res.send({verified: 1, id : results1[0].id});
+					res.send({verified : 1, id : results1[0].id});
 				}
 				// console.log(results1[0].mail_verified);
 
