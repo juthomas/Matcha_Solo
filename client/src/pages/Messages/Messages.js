@@ -6,6 +6,7 @@ function Messages() {
     const [relationList, setRelationList] = useState([]);
     const [messageList, setMessageList] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    const [currentChatId, setCurrentChatId] = useState(-1);
 
     function handleChange(currentMessage) {
         setNewMessage(currentMessage);
@@ -14,26 +15,46 @@ function Messages() {
 
     useEffect(() => {
             var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-
-            Axios.post(urlPrefix + "/user/get_previews", { userId: 292 })
-                .then((response) => {
-                        console.log(response.data);
-
+                Axios.post(urlPrefix + "/user/get_previews", { userId: 292 })
+                    .then((response) => {
                         var tmpRelationList = response.data.map((item, key) => {
                                 return (
                                 // <p key = { key } > { item.id }, { item.name }, { item.old } </p>)
-                                <div className="person" data-chat="person1">
+                                <div className="person" data-chat="person1" onClick={() => {
+                                    setCurrentChatId(item.id);
+                                    console.log("Clicked");
+                                    }}>
                                 <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg" alt="" />
                                 <span className="name">{item.name}</span>
                                 <span className="time">{item.timestamp}</span>
                                 <span className="preview">{item.message}</span>
                                 </div>)
                                 ;
-                                }); setRelationList(tmpRelationList);
+                                }); 
+                                setRelationList(tmpRelationList);
+                                setCurrentChatId(tmpRelationList[0].id);
+                                //refreshMessage(urlPrefix, tmpRelationList[0].id);
                         });
-                        console.log(messageList);
+                        //refreshMessage(urlPrefix, currentChat.id);
                 }
                 , [])
+
+        useEffect(() => {
+            console.log("Coucou");
+            console.log(currentChatId);
+            var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+                Axios.post(urlPrefix + "/user/get_messages", { userId: 292, friendId:currentChatId})
+                    .then((response) => {                         
+                        var tmpMessageList = response.data.map((item, key) => {
+                            return (
+                                <div className={item.id == 292 ? "bubble me" : "bubble you"}>
+                                    {item.message}
+                                </div>
+                            );
+                        }); setMessageList(tmpMessageList);
+                    });
+        } ,[currentChatId])
+    
                 return (
                         <div className="wrapper">
                         <div className="container">
@@ -78,27 +99,16 @@ function Messages() {
                                     </div> */}
                                 </div>
                                 </div>
-                              
                                 <div className="write">
                                     <input type="text" value={newMessage} onChange={event => setNewMessage(event.target.value)}
                                         onKeyPress={event => {
                                             if (event.key === 'Enter') {
                                                 var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-                                                Axios.post(urlPrefix + "/user/send_message", { userId: 292, friendId: 254, message:{newMessage} }).then((response) => {
-                                                    setNewMessage("");
-                                                    Axios.post(urlPrefix + "/user/get_messages", { userId: 292, friendId:254 })
-                                                    .then((response) => {
-                                                            console.log(response.data);
-                                    
-                                                            var tmpMessageList = response.data.map((item, key) => {
-                                                                    return (
-                                                                    <div className={item.id == 292 ? "bubble me" : "bubble you"}>
-                                                                        {item.message}
-                                                                    </div>
-                                                                    );
-                                                                    }); setMessageList(tmpMessageList);
-                                                            });
+                                                Axios.post(urlPrefix + "/user/send_message", { userId: 292, friendId: {currentChatId}, message:{newMessage} }).then((response) => {
                                                 });
+                                                const newElement = <div className= {"bubble me"}> {newMessage} </div>;
+                                                setMessageList(messageList => [...messageList, newElement]);
+                                                setNewMessage("");
                                             }
                                      }} />
                                     <a href="javascript:;" className="write-link send"></a>
