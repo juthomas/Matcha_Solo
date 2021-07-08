@@ -37,19 +37,19 @@ router.post("/login", async(req, res) => {
 				console.log(results[0])
 				if (results[0].mail_verified === 0)
 				{
-					res.json({ loggedIn: false, message: "mail not verified" , id: results[0].id});
+					res.json({ error: true, message: "mail not verified" , id: results[0].id});
 				}
 				else
 				{
-					res.json({ loggedIn: true, mail: mail });
+					res.json({ error: false, mail: mail });
 				}
 			}
 			else {
-				res.json({ loggedIn: false, message: "Bad mail/password" });
+				res.json({ error: true, message: "Bad mail/password" });
 			}
 		}
 		else {
-			res.json({ loggedIn: false, message: "mail doesnt exist" });
+			res.json({ error: true, message: "mail doesnt exist" });
 		}
 		console.log(err);
 	});
@@ -68,6 +68,23 @@ router.post("/maillink", (req, res) => {
 		res.send({result: results.affectedRows})
 		console.log(results.affectedRows);
 	});
+})
+
+router.post("/getconfirmationinfo", (req, res) => {
+	const id = req.body.id;
+	// console.log
+	db.query("SELECT * FROM Users WHERE id = ?", [id], (err, result) => {
+		if (err)
+		{
+			console.log(err);
+		}
+		else
+		{
+			console.log("mail verified : " + result[0].mail_verified);
+			res.send({verified : result[0].mail_verified});
+		}
+	})
+
 })
 
 router.post("/mailconfirmation", (req, res) => {

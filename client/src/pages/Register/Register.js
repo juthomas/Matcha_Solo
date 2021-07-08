@@ -124,7 +124,7 @@ function Register() {
 					<Spacer height="30px"/>
 					<Input placeholder="Password" type="password" onChange={(event) => {setPassword(event.target.value)}}/>
 					{/* <Spacer height="60px"/> */}
-					<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="passShort">{validationMessage}</p>
+					<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
 					{/* <Button text="Register" onClick="/mailconfirmation"/> */}
 					<button type="submit" className="ButtonStyle">Register</button>
 				</form>

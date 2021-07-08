@@ -13,6 +13,8 @@ function Login() {
 	const [password, setPassword] = useState('');
 	const [, setLocalMail] = useLocalStorage('mail');
 	const [, setLoggedIn] = useLocalStorage('loggedIn');
+	const [validationMessage, setValidationMessage] = useState("Nothing");
+
 	
 	let history = useHistory();
 	
@@ -25,7 +27,7 @@ function Login() {
 		Axios.post(urlPrefix + "/user/login", {mail : mail, password : password})
 		.then((response) => {
 			console.log(response);
-			if (response.data.loggedIn)
+			if (response.data.error == 0)
 			{
 				// localStorage.setItem("loggedIn", true);
 				setLoggedIn(true);
@@ -35,10 +37,14 @@ function Login() {
 			}
 			else
 			{
-				console.log(response.data.message)
+				console.log("Error message :", response.data.message);
 				if (response.data.message === "mail not verified")
 				{
 					history.push("/mailconfirmation/" + response.data.id);
+				}
+				else
+				{
+					setValidationMessage(response.data.message);
 				}
 			}
 		})
@@ -69,7 +75,8 @@ function Login() {
 					<div className="forgotPassword">
 						<a href="/resetcredentials">Forgot your password?</a>
 					</div>
-					<Spacer height="60px"/>
+					<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
+					{/* <Spacer height="60px"/> */}
 					{/* <Button text="login" onClick="/loggedin/home"/> */}
 					{/* Problem here */}
 					<button type="submit" className="ButtonStyle">login</button>

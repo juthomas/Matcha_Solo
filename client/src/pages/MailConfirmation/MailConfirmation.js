@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import "./MailConfirmation.css"
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
@@ -12,6 +12,26 @@ function MailConfirmation() {
 	const [code, setCode] = useState('');
 	let history = useHistory();
 
+	useEffect(() => {
+		const checkMailConfirmation = setInterval(() => {
+			var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+			Axios.post(urlPrefix + "/user/getconfirmationinfo", {id : id})
+			.then((response) => {
+				if (response.data.verified === 1)
+				{
+					history.push("/loggedin/home");
+				}
+
+			})
+
+
+
+		}, 5000);
+
+		return () => {
+			clearInterval(checkMailConfirmation);
+		}
+	}, [])
 
 	const reqCode = () => {
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
