@@ -7,7 +7,7 @@ uuid npm lib to create random uid
 ->Deconnection en un seul Clic
 ->connection nom d'utilisateur et Mdp
 
-->Mail confirmation => Form
+->Mail confirmation => Form ✅
 
 ->Styles pour les boutons et tout dans un css a part
 

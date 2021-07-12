@@ -18,6 +18,15 @@ function MailConfirmation() {
 	}, [code])
 
 	useEffect(() => {
+		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+		Axios.post(urlPrefix + "/user/getconfirmationinfo", {id : id})
+		.then((response) => {
+			if (response.data.verified === 1)
+			{
+				history.push("/loggedin/home");
+			}
+
+		});
 		const checkMailConfirmation = setInterval(() => {
 			var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 			Axios.post(urlPrefix + "/user/getconfirmationinfo", {id : id})
@@ -38,7 +47,8 @@ function MailConfirmation() {
 		}
 	}, [])
 
-	const reqCode = () => {
+	const onFormSubmit = (e) => {
+		e.preventDefault();
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		console.log("Back Host :" + urlPrefix);
 		// console.log("mail : :" + mail);
@@ -73,13 +83,15 @@ function MailConfirmation() {
 			enter your confirmation code
 			</div>
 			<div className="buttons" >
-				<Input placeholder="Code" onChange={(event) => {setCode(event.target.value)}}/>
-				<Spacer height="30px"/>
-				<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
-
-				<Spacer height="30px"/>
-				{/* <Button text="Ok" onClick="/"/> */}
-				<button className="ButtonStyle" onClick={reqCode}>Ok</button>
+				<form onSubmit={onFormSubmit}>
+					<Input placeholder="Code" onChange={(event) => {setCode(event.target.value)}}/>
+					<Spacer height="30px"/>
+					<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
+					<Spacer height="30px"/>
+					{/* <Button text="Ok" onClick="/"/> */}
+					<button type="submit" className="ButtonStyle">Ok</button>
+				
+				</form>
 			</div>
 		</div>
 	)
