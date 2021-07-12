@@ -29,30 +29,51 @@ router.post("/login", async(req, res) => {
 	db.query("SELECT * FROM Users WHERE mail = ?", [mail],
 	async (err, results) => {
 		if (err) {
-			console.log(err);
+			console.log("Error : " + err);
 		}
 		if (results.length) {
 			const comparaison = await bcrypt.compare(password, results[0].password);
 			if (comparaison) {
-				console.log(results[0])
+				// console.log(results[0])
 				if (results[0].mail_verified === 0)
 				{
 					res.json({ error: true, message: "mail not verified" , id: results[0].id});
+				// console.log("mail not verified");
+				
 				}
 				else
 				{
+				// console.log("mail verified", mail);
+
 					res.json({ error: false, mail: mail });
 				}
 			}
 			else {
 				res.json({ error: true, message: "Bad mail/password" });
+				// console.log("Bad mail/password" );
+			
 			}
 		}
 		else {
 			res.json({ error: true, message: "mail doesnt exist" });
+			// console.log("Mail doesnt exist" );
+		
 		}
-		console.log(err);
+		// console.log(err);
 	});
+})
+
+router.post("/deleteuser", (req, res) => {
+	db.query("DELETE FROM Users WHERE id = ?",[id],
+	(err, results) => {
+		if (err)
+		{
+			console.log(err);
+		}
+		// res.send({result: results.affectedRows})
+		console.log(results.affectedRows);
+	});
+
 })
 
 router.post("/maillink", (req, res) => {
@@ -87,6 +108,101 @@ router.post("/getconfirmationinfo", (req, res) => {
 
 })
 
+router.post("/resetcredentials", (req, res) => {
+	const mail = req.body.mail;
+	var urlPrefix = req.protocol + "://" + req.hostname + ":3000";
+
+	console.log("Mail : " + mail);
+	if (!(req.body.mail.indexOf('@') > 0
+	&& req.body.mail.indexOf('@') + 1 < req.body.mail.lastIndexOf('.')
+	&& req.body.mail.lastIndexOf('.') + 2 < req.body.mail.length
+	))
+	{
+		res.send({error : true, message : "Incorrect mail"});
+		return ;
+	}
+	db.query("SELECT * FROM Users WHERE mail = ?", [mail], (err, results) => {
+		if (err)
+		{
+			console.log(err);
+		}
+		if (!results.length)
+		{
+			res.send({error : true, message : "Mail doesnt exist"});
+		}
+		else
+		{
+			let code = Math.floor(Math.random() * 88888) + 11111 + '_' + results[0].id;
+			
+			db.query("UPDATE Users SET reset_code = ? WHERE id = ?", [code, results[0].id],
+			(err2, results2) => {
+				if (err2)
+				{
+					console.log(err2);
+					res.send({error : true, message : "Error sending mail"});
+				
+				}
+				if (results2)
+				{
+					sendResetMail(urlPrefix, mail, code);
+					res.send({error : false, message : results[0].id});
+				}
+			})
+		}
+	})
+
+})
+
+router.post("/setpassword", async (req, res) => {
+	const id = req.body.id;
+	const code = req.body.code;
+
+	const password = await bcrypt.hash(req.body.password, saltRounds);
+
+	// const password = req.body.password;
+
+	console.log("Set password");
+	console.log("id : " + id);
+	console.log("code : " + code);
+	console.log("password : " + password);
+
+	if (req.body.password.length < 4)
+	{
+		res.send({error : true, message : "Password too short"});
+		return ;
+	}
+
+	db.query("SELECT * FROM Users WHERE id = ?", [id],
+	(err1, results1) => {
+		if (err1)
+		{
+			console.log(err1);
+		}
+		if (results1[0].reset_code === code)
+		{
+			db.query("UPDATE Users SET password = ? WHERE id = ?",[password,id],
+			(err2, results2) => {
+				if (err2)
+				{
+					console.log(err2);
+				}
+				// console.log("Set password done");
+				// console.log(results2.affectedRows);
+				if (results2.affectedRows === 1)
+				{
+					res.send({error : false, message : "Password set"});
+				}
+			});
+		}
+		else
+		{
+			//Code doesnt match
+			res.send({error : true, message : "Bad page url"});
+		}
+	})
+
+})
+
 router.post("/mailconfirmation", (req, res) => {
 	const id = req.body.id;
 	const code = req.body.code;
@@ -110,14 +226,45 @@ router.post("/mailconfirmation", (req, res) => {
 				console.log(results2.affectedRows);
 			});
 		}
-
-
 		res.send({result : results1[0].verification_code === code});
 	})
 	// res.send("OK");
 })
 
-function sendMail(urlPrefix, mail, login, id, code)
+function sendResetMail(urlPrefix, mail, code)
+{
+	var transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: process.env.MAIL_USERNAME,
+			pass: process.env.MAIL_PASSWORD
+		}
+	});
+	
+	//   var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+	var resetLink = urlPrefix + "/setpassword/" + code;
+	
+	
+	var mailOptions = {
+		from: 'Meater',
+		to: mail,
+		subject: 'Meater Reset Password',
+		html: `<a href='${resetLink}'>
+		Click on this link to reset your password
+		</a>`,
+		text: 'Click on this link to reset your password'
+	};
+	
+	transporter.sendMail(mailOptions, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+		  console.log('Email sent: ' + info.response);
+		}
+	  });
+}
+
+function sendConfonfirmationMail(urlPrefix, mail, login, id, code)
 {
 	var transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -165,25 +312,19 @@ router.post("/register", async (req, res) => {
 
 	if (req.body.login.length < 4)
 	{
-		res.send({error : 1, message : "Login too short"});
+		res.send({error : true, message : "Login too short"});
 		return ;
 	}
 	
 	if (req.body.firstname.length < 1)
 	{
-		res.send({error : 1, message : "First blank"});
+		res.send({error : true, message : "First blank"});
 		return ;
 	}
 	
 	if (req.body.lastname.length < 1)
 	{
-		res.send({error : 1, message : "Lastname blank"});
-		return ;
-	}
-	
-	if (req.body.password.length < 4)
-	{
-		res.send({error : 1, message : "Password too short"});
+		res.send({error : true, message : "Lastname blank"});
 		return ;
 	}
 
@@ -192,13 +333,20 @@ router.post("/register", async (req, res) => {
 		&& req.body.mail.lastIndexOf('.') + 2 < req.body.mail.length
 		))
 	{
-		res.send({error : 1, message : "Incorrect mail"});
+		res.send({error : true, message : "Incorrect mail"});
+		return ;
+	}
+	
+	if (req.body.password.length < 4)
+	{
+		res.send({error : true, message : "Password too short"});
 		return ;
 	}
 
 
 
-	const password = await bcrypt.hash(req.body.password, saltRounds); ;
+
+	const password = await bcrypt.hash(req.body.password, saltRounds);
 	var id = 0;
 	var code = Math.floor(Math.random() * 8888) + 1111;
 
@@ -224,14 +372,14 @@ router.post("/register", async (req, res) => {
 							}
 							console.log("New id :", results2.insertId);
 							
-							sendMail(urlPrefix, mail, login, results2.insertId, code);
-							res.send({verified: 0, id : results2.insertId});
+							sendConfonfirmationMail(urlPrefix, mail, login, results2.insertId, code);
+							res.send({verified: false, id : results2.insertId});
 							
 						});
 					}
 					else
 					{
-						res.send({error : 1, message : "Login allready taken"});
+						res.send({error : true, message : "Login allready taken"});
 					}
 
 				});
@@ -241,15 +389,15 @@ router.post("/register", async (req, res) => {
 			else
 			{
 				console.log("mail allready registred");
-				if (results1[0].mail_verified === 0)
+				if (results1[0].mail_verified === false)
 				{
 					console.log("verification mail resended");
 					sendMail(urlPrefix, mail, login, results1[0].id, results1[0].verification_code);
-					res.send({verified : 0, id : results1[0].id});
+					res.send({verified : false, id : results1[0].id});
 				}
 				else
 				{
-					res.send({verified : 1, id : results1[0].id});
+					res.send({verified : true, id : results1[0].id});
 				}
 				// console.log(results1[0].mail_verified);
 

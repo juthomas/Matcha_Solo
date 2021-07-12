@@ -22,13 +22,14 @@ function Login() {
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-		console.log("Back Host :" + urlPrefix);
+		// console.log("Back Host :" + urlPrefix);
 		// console.log("mail : :" + mail);
 		Axios.post(urlPrefix + "/user/login", {mail : mail, password : password})
 		.then((response) => {
-			console.log(response);
-			if (response.data.error == 0)
+			// console.log(response);
+			if (response.data.error === false)
 			{
+				// console.log("mail : " + response.data.mail);
 				// localStorage.setItem("loggedIn", true);
 				setLoggedIn(true);
 				// localStorage.setItem("mail", response.data.mail);
@@ -37,7 +38,8 @@ function Login() {
 			}
 			else
 			{
-				console.log("Error message :", response.data.message);
+				// console.log("Error value :", response.data.error);
+				// console.log("Error message :", response.data.message);
 				if (response.data.message === "mail not verified")
 				{
 					history.push("/mailconfirmation/" + response.data.id);

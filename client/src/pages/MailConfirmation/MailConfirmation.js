@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import "./MailConfirmation.css"
-import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
 import {useParams, useHistory} from "react-router-dom";
@@ -11,6 +10,12 @@ function MailConfirmation() {
 	let { id } = useParams();
 	const [code, setCode] = useState('');
 	let history = useHistory();
+	const [validationMessage, setValidationMessage] = useState("Nothing");
+
+
+	useEffect(() => {
+		setValidationMessage("Nothing");
+	}, [code])
 
 	useEffect(() => {
 		const checkMailConfirmation = setInterval(() => {
@@ -47,7 +52,8 @@ function MailConfirmation() {
 			}
 			else
 			{
-				console.log("Bad code");
+				// console.log("Bad code");
+				setValidationMessage("Wrong code");
 			}
 		});
 	}
@@ -68,7 +74,10 @@ function MailConfirmation() {
 			</div>
 			<div className="buttons" >
 				<Input placeholder="Code" onChange={(event) => {setCode(event.target.value)}}/>
-				<Spacer height="100px"/>
+				<Spacer height="30px"/>
+				<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
+
+				<Spacer height="30px"/>
 				{/* <Button text="Ok" onClick="/"/> */}
 				<button className="ButtonStyle" onClick={reqCode}>Ok</button>
 			</div>

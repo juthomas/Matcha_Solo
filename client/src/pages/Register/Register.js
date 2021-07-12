@@ -1,6 +1,5 @@
 // import React from 'react'
 import "./Register.css"
-import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
 import Axios from 'axios'
@@ -19,10 +18,6 @@ function Register() {
 	const [password, setPassword] = useState('');
 	const [validationMessage, setValidationMessage] = useState("Nothing");
 	let history = useHistory();
-
-	const drawValidation = () => {
-
-	}
 
 	useEffect(() => {
 		if (login.length < 4 && login.length > 0)
@@ -55,13 +50,13 @@ function Register() {
 												password : password})
 		.then((response) => {
 			console.log("response :", response);
-			if (response.data.error === 1)
+			if (response.data.error === true)
 			{
 				console.log("Error message :", response.data.message);
 				setValidationMessage(response.data.message);
 
 			}
-			else if (response.data.verified === 1)
+			else if (response.data.verified === true)
 			{
 				history.push("/loggedin/home");
 			}

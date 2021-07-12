@@ -25,7 +25,7 @@ function App() {
 				<Route path="/mailconfirmation/:id" exact render={() => <MailConfirmation/>}/>
 				<Route path="/maillink/:id" exact render={() => <MailLink/>}/>
 				<Route path="/resetcredentials" exact render={() => <ResetCredentials/>}/>
-				<Route path="/setpassword" exact render={() => <SetPassword/>}/>
+				<Route path="/setpassword/:code" exact render={() => <SetPassword/>}/>
 				<Route path="/loggedin"  render={() => <Navbar highlight="1"/>}></Route>
 				<Route path="/loggedin/home" exact render={() => <Home/>}/>
 				<Route path="/loggedin/messages" exact render={() => <Messages/>}/>

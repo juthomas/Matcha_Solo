@@ -71,3 +71,51 @@
 	font-family: "Vollkorn SC";
 	position: absolute;
 }
+
+.MailConfirmation .ButtonStyle {
+	position:relative;
+	width: 100%;
+	display: inline-block;
+
+	height: 50px;
+	min-width: 200px;
+	padding-top: 5px;
+	background-color:white;
+	overflow:hidden;
+	border: 0;
+	font-family: 'Vollkorn SC', serif;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: none;
+	color: black;
+	text-align: center;
+	font-size: 30px;
+	--notchSize: 21px;
+	clip-path:
+	polygon(
+	  0% var(--notchSize), 
+	  var(--notchSize) 0%, 
+	  100% 0%, 
+	  100% var(--notchSize), 
+	  100% calc(100% - var(--notchSize)), 
+	  calc(100% - var(--notchSize)) 100%, 
+	  0% 100%, 
+	  0% calc(100% - var(--notchSize))
+	);
+}
+
+.MailConfirmation .ButtonStyle:hover{
+	cursor: pointer;
+	background-color: lightgrey;
+}
+
+.MailConfirmation .validationMessage {
+	/* visibility: hidden; */
+	font-family: 'Vollkorn SC', serif;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: none;
+	color: #c64040;
+	text-align: center;
+	font-size: 30px;
+}

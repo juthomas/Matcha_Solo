@@ -1,10 +1,56 @@
-import React from 'react'
+import React, {useState} from 'react'
 import "./ResetCredentials.css"
-import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
+import Axios from 'axios'
+
 
 function ResetCredentials() {
+	const [mail, setMail] = useState("");
+	const [validationMessage, setValidationMessage] = useState("Nothing");
+
+
+	const onFormSubmit = (e) => {
+		e.preventDefault();
+		console.log("cc, cv? : " + mail);
+		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+		Axios.post(urlPrefix + "/user/resetcredentials", {mail : mail})
+		.then((response) => {
+			if (response.data.error === true)
+			{
+
+				console.log("response :", response.data.message);
+				setValidationMessage(response.data.message);
+			}
+			else
+			{
+				console.log("response :", response.data.message);
+				setValidationMessage("Nothing");
+			}
+			// if (response.data.error === 1)
+			// {
+			// 	console.log("Error message :", response.data.message);
+			// 	setValidationMessage(response.data.message);
+
+			// }
+			// else if (response.data.verified === 1)
+			// {
+			// 	history.push("/loggedin/home");
+			// }
+			// else
+			// {
+			// 	history.push("/mailconfirmation/" + response.data.id);
+			// }
+		})
+
+
+	}
+
+
+
+
+
+
 	return (
 		<div className="ResetCredentials">
 			<div className="Background"/>
@@ -19,11 +65,19 @@ function ResetCredentials() {
 				to you by email
 			</div>
 			<div className="buttons" >
-				<Input placeholder="Login"/>
-				<Spacer height="30px"/>
-				<Input placeholder="Mail"/>
-				<Spacer height="124px"/>
-				<Button text="Send Mail" onClick="/setpassword"/>
+				<form onSubmit={onFormSubmit}>
+
+				{/* <Input placeholder="Login"/> */}
+				{/* <Spacer height="30px"/> */}
+				<Input placeholder="Mail" onChange={(event) => {setMail(event.target.value)}}/>
+				<Spacer height="104px"/>
+				<p style={validationMessage === "Nothing" ? {visibility:"hidden"} : {}} className="validationMessage">{validationMessage}</p>
+				
+				<Spacer height="24px"/>
+				{/* <Button text="Send Mail" onClick="/setpassword"/> */}
+				<button type="submit" className="ButtonStyle">Send Mail</button>
+
+				</form>
 			</div>
 		</div>
 	)
