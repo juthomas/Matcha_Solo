@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const auth = require('./auth');
 
-router.post('/', (req,res) => {
+router.post('/', auth, (req,res) => {
 	console.log(req.body)
 
 	db.query("SELECT * FROM Users LIMIT ? OFFSET ?",

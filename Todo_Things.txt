@@ -3,15 +3,18 @@ uuid npm lib to create random uid
 -> Local storage for all page + register
 
 
-->Mail de reinitialisation du Mdp
+->Mail de reinitialisation du Mdp ✅
 ->Deconnection en un seul Clic
-->connection nom d'utilisateur et Mdp
+->connection nom d'utilisateur et Mdp ✅
 
 ->Mail confirmation => Form ✅
 
 ->Styles pour les boutons et tout dans un css a part
 
 Sql relationships (tab "Relationships")
+
+->Todo => tokens https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466557-creez-des-tokens-dauthentification
+
 
  user_id | partner_id | relation
 ---------|-----------|----------

@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require("../config/db");
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 // const mysql2 = require('mysql2/promise');
 
@@ -44,8 +45,13 @@ router.post("/login", async(req, res) => {
 				else
 				{
 				// console.log("mail verified", mail);
-
-					res.json({ error: false, login: login });
+					
+					res.json({ error: false, login: login, id:results[0].id,
+						token : jwt.sign({ userId: results[0].id},
+							process.env.TOKEN_SECRET,
+						{ expiresIn: '2h' }
+					  ) 
+					});
 				}
 			}
 			else {

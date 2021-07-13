@@ -5,14 +5,18 @@ import Input from "../../components/Input/Input"
 import Spacer from "../../components/Spacer/Spacer"
 import Axios from 'axios'
 import {useHistory} from 'react-router-dom'
-import useLocalStorage from "../../hooks/useLocalStorage"
+// import useLocalStorage from "../../hooks/useLocalStorage"
 
 
 function Login() {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
-	const [, setLocalMail] = useLocalStorage('login');
-	const [, setLoggedIn] = useLocalStorage('loggedIn');
+	// const [, setLocalMail] = useLocalStorage('login');//rm dat
+	// const [, setLoggedIn] = useLocalStorage('loggedIn');//rm dat
+
+	// const [, setToken] = useLocalStorage('token');
+	// const [, setId] = useLocalStorage('id');
+
 	const [validationMessage, setValidationMessage] = useState("Nothing");
 
 	
@@ -29,11 +33,20 @@ function Login() {
 			// console.log(response);
 			if (response.data.error === false)
 			{
+				// console.log("Token :" + response.data.token);
+				// console.log("Id :" + response.data.id);
+
 				// console.log("login : " + response.data.login);
 				// localStorage.setItem("loggedIn", true);
-				setLoggedIn(true);
+				// setLoggedIn(true);
 				// localStorage.setItem("login", response.data.login);
-				setLocalMail(response.data.login);//RM dat
+				// setLocalMail(response.data.login);//RM dat
+				localStorage.setItem("meater-token", response.data.token);
+				localStorage.setItem("meater-id", response.data.id);
+
+				// setToken(response.data.token);
+				// setId(response.data.id);
+
 				history.push("/loggedin/home");
 			}
 			else
@@ -46,6 +59,7 @@ function Login() {
 				}
 				else
 				{
+					// console.log(response);
 					setValidationMessage(response.data.message);
 				}
 			}

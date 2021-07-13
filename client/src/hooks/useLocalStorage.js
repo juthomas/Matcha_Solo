@@ -11,12 +11,12 @@ function useLocalStorage(key, initialValue) {
 		console.log("Error : " + typeof jsonValue);
 		if (jsonValue !== null && jsonValue !== 'undefined')
 		{
-			console.log(jsonValue);
+			console.log("Json value " + jsonValue);
 		}
 	})
 	useEffect(() => {
 		localStorage.setItem(prefixedKey, JSON.stringify(value));
-	}, [prefixedKey, value]);
+	}, [ value]);
 	return ([value, setValue]);
 }
 

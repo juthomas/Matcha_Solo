@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import "./SwipeCard.css"
 import $ from "jquery"
 import Axios from "axios"
+import useLocalStorage from "../../hooks/useLocalStorage"
+
 // import reactElementToJSXString from 'react-element-to-jsx-string';
 
 function SwipeCard() {
@@ -15,6 +17,9 @@ function SwipeCard() {
 	// const [clicksNumber, setClicksNumber] = useState(0);
 	// var items = []
 	const [itemsState, setItemsState] = useState([]);
+	// const [token, ] = useLocalStorage('token');
+	// const [id,] = useLocalStorage('id');
+
 
 
 	// window.numOfCards = numberOfProfiles;
@@ -89,28 +94,36 @@ function SwipeCard() {
 		// TODO: Replace with a correct thing:
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		console.log("Back Host :" + urlPrefix);
-		Axios.post(urlPrefix + "/get_profiles",
-			{ offset: dbOffset.current, limit: dbLimit })
-			.then((response) => {
-				console.log(response)
 
+			Axios.post(urlPrefix + "/get_profiles",
+			{
+				
+				 offset: dbOffset.current, limit: dbLimit 
+			},{headers: {'Authorization' : `Bearer ${localStorage.getItem("meater-token")}`}}
+			)
+			.then((response) => {
+				console.log("HAHA");
+				console.log("response :" + response)
+				
 				if (dbLimit > response.data.length) {
 					dbOffset.current = 0;
 				}
 				else {
 					dbOffset.current += dbLimit;
 				}
-
+				
 				profilesDatas.current = profilesDatas.current.splice(profilesDatas.current.length - 1, profilesDatas.current.length);
 				console.log("mid current profile data :", profilesDatas.current)
-
+				
 				profilesDatas.current = profilesDatas.current.concat(response.data)
-
+				
 				console.log(response.data)
 				console.log(profilesDatas.current)
 				refreshProfilesItems()
 				setNumberOfProfiles(profilesDatas.current.length)
 			});
+			console.log("request done");
+
 	}, [refreshProfilesItems]);
 
 	useEffect(() => {
