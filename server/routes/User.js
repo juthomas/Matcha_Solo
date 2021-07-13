@@ -22,11 +22,11 @@ const mailCredentials = {
 
 router.post("/login", async(req, res) => {
 	console.log("Login page");
-	const mail = req.body.mail;
+	const login = req.body.login;
 	const password = req.body.password;
 	
 	// console.log("Wsh mail : " + mail);
-	db.query("SELECT * FROM Users WHERE mail = ?", [mail],
+	db.query("SELECT * FROM Users WHERE username = ?", [login],
 	async (err, results) => {
 		if (err) {
 			console.log("Error : " + err);
@@ -45,17 +45,17 @@ router.post("/login", async(req, res) => {
 				{
 				// console.log("mail verified", mail);
 
-					res.json({ error: false, mail: mail });
+					res.json({ error: false, login: login });
 				}
 			}
 			else {
-				res.json({ error: true, message: "Bad mail/password" });
+				res.json({ error: true, message: "Bad login/password" });
 				// console.log("Bad mail/password" );
 			
 			}
 		}
 		else {
-			res.json({ error: true, message: "mail doesnt exist" });
+			res.json({ error: true, message: "Login doesnt exist" });
 			// console.log("Mail doesnt exist" );
 		
 		}

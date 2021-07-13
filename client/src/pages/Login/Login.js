@@ -9,9 +9,9 @@ import useLocalStorage from "../../hooks/useLocalStorage"
 
 
 function Login() {
-	const [mail, setMail] = useState('');
+	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
-	const [, setLocalMail] = useLocalStorage('mail');
+	const [, setLocalMail] = useLocalStorage('login');
 	const [, setLoggedIn] = useLocalStorage('loggedIn');
 	const [validationMessage, setValidationMessage] = useState("Nothing");
 
@@ -23,17 +23,17 @@ function Login() {
 		e.preventDefault();
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		// console.log("Back Host :" + urlPrefix);
-		// console.log("mail : :" + mail);
-		Axios.post(urlPrefix + "/user/login", {mail : mail, password : password})
+		// console.log("login : :" + login);
+		Axios.post(urlPrefix + "/user/login", {login : login, password : password})
 		.then((response) => {
 			// console.log(response);
 			if (response.data.error === false)
 			{
-				// console.log("mail : " + response.data.mail);
+				// console.log("login : " + response.data.login);
 				// localStorage.setItem("loggedIn", true);
 				setLoggedIn(true);
-				// localStorage.setItem("mail", response.data.mail);
-				setLocalMail(response.data.mail);
+				// localStorage.setItem("login", response.data.login);
+				setLocalMail(response.data.login);//RM dat
 				history.push("/loggedin/home");
 			}
 			else
@@ -70,7 +70,7 @@ function Login() {
 			</div>
 			<div className="buttons" >
 				<form onSubmit={onFormSubmit}>
-					<Input placeholder="Mail" onChange={(event) => {setMail(event.target.value)}}/>
+					<Input placeholder="Login" onChange={(event) => {setLogin(event.target.value)}}/>
 					<Spacer height="30px"/>
 					<Input placeholder="Password" type="password" onChange={(event) => {setPassword(event.target.value)}}/>
 					<Spacer height="30px"/>
