@@ -20,7 +20,9 @@ function MailLink() {
 			console.log(response.data.result);
 			if (response.data.result)
 			{
-				setMailRegistred("Yep");
+				// setMailRegistred("Yep");
+				localStorage.setItem("meater-token", response.data.token);
+				localStorage.setItem("meater-id", response.data.id);
 				history.push("/loggedin/home");
 			}
 		})

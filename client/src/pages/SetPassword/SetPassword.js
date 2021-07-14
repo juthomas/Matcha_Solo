@@ -64,6 +64,10 @@ function SetPassword() {
 					console.log("response : " + response.data.error);
 					if (response.data.error === false)
 					{
+
+						//
+						localStorage.setItem("meater-token", response.data.token);
+						localStorage.setItem("meater-id", response.data.id);
 						history.push("/loggedin/home");
 					}
 					else

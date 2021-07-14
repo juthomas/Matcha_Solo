@@ -56,10 +56,12 @@ function Register() {
 				setValidationMessage(response.data.message);
 
 			}
-			else if (response.data.verified === true)
-			{
-				history.push("/loggedin/home");
-			}
+			// else if (response.data.verified === true)
+			// {
+			// 	localStorage.setItem("meater-token", response.data.token);
+			// 	localStorage.setItem("meater-id", response.data.id);
+			// 	history.push("/loggedin/home");
+			// }
 			else
 			{
 				history.push("/mailconfirmation/" + response.data.id);

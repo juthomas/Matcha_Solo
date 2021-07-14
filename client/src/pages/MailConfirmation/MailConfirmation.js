@@ -23,6 +23,8 @@ function MailConfirmation() {
 		.then((response) => {
 			if (response.data.verified === 1)
 			{
+				localStorage.setItem("meater-token", response.data.token);
+				localStorage.setItem("meater-id", response.data.id);
 				history.push("/loggedin/home");
 			}
 
@@ -33,6 +35,8 @@ function MailConfirmation() {
 			.then((response) => {
 				if (response.data.verified === 1)
 				{
+					localStorage.setItem("meater-token", response.data.token);
+					localStorage.setItem("meater-id", response.data.id);
 					history.push("/loggedin/home");
 				}
 
