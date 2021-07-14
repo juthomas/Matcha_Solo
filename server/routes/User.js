@@ -4,6 +4,7 @@ const db = require("../config/db");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 const saltRounds = 10;
 
 router.post("/login", async (req, res) => {
@@ -301,6 +302,9 @@ router.post("/register", async (req, res) => {
 	const firsname = req.body.firstname;
 	const lastname = req.body.lastname;
 	const mail = req.body.mail;
+	const latitude = req.body.latitude;
+	const longitude = req.body.longitude;
+
 
 	if (req.body.login.length < 4) {
 		res.send({ error: true, message: "Login too short" });
@@ -333,6 +337,13 @@ router.post("/register", async (req, res) => {
 		return;
 	}
 
+	if (req.body.latitude === '' || req.body.longitude === '')
+	{
+		res.send({ error: true, message: "Please wait, we are tracking you" });
+		return;
+	}
+
+
 	const password = await bcrypt.hash(req.body.password, saltRounds);
 	var id = 0;
 	var code = Math.floor(Math.random() * 8888) + 1111;
@@ -352,8 +363,8 @@ router.post("/register", async (req, res) => {
 					}
 					if (!results3.length) {
 						db.query(
-							"INSERT INTO Users (username, name, lastname, mail, password, verification_code) VALUES (?, ?, ?, ?, ?, ?);",
-							[login, firsname, lastname, mail, password, code],
+							"INSERT INTO Users (username, name, lastname, mail, password, verification_code, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+							[login, firsname, lastname, mail, password, code, latitude, longitude],
 							(err2, results2) => {
 								if (err2) {
 									console.log(err2);

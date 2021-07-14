@@ -17,6 +17,10 @@ function Register() {
 	const [mail, setMail] = useState('');
 	const [password, setPassword] = useState('');
 	const [validationMessage, setValidationMessage] = useState("Nothing");
+	const [latitude, setLatitude] = useState('');
+	const [longitude, setLongitude] = useState('');
+
+
 	let history = useHistory();
 
 	useEffect(() => {
@@ -32,6 +36,9 @@ function Register() {
 		{
 			setValidationMessage("Nothing");
 		}
+
+		// console.log("Latitude : " + latitude);
+		// console.log("Longitude : " + longitude);
 	}, [login, firstname, lastname, mail, password])
 
 	const onFormSubmit = (e) => {
@@ -47,7 +54,10 @@ function Register() {
 												firstname : firstname,
 												lastname : lastname,
 												mail : mail,
-												password : password})
+												password : password,
+												latitude : latitude,
+												longitude : longitude
+											})
 		.then((response) => {
 			console.log("response :", response);
 			if (response.data.error === true)
@@ -94,6 +104,61 @@ function Register() {
 	// 	})
 	// }
 
+	function getlocationByIp()
+	{
+		const URL = "https://ip.nf/me.json";
+
+		fetch(URL, {method : "get"})
+		.then((response) => response.json())
+		.then((data) => {
+			// console.log(data);
+			// console.log(data.ip.latitude);
+			// console.log(data.ip.longitude);
+			setLatitude(data.ip.latitude);
+			setLongitude(data.ip.longitude);
+		}
+			)
+	}
+
+	var options = {
+		enableHighAccuracy: true,
+		timeout: 5000,
+		maximumAge: 0,
+	  };
+	  function success(pos) {
+		var crd = pos.coords;
+		setLatitude(crd.latitude);
+		setLongitude(crd.longitude);
+	  }
+	  
+	  function errors(err) {
+		  console.warn(`ERROR(${err.code}): ${err.message}`);
+		  getlocationByIp();
+	  }
+
+	useEffect(() => {
+	  if (navigator.geolocation) {
+		navigator.permissions
+		  .query({ name: "geolocation" })
+		  .then(function (result) {
+			if (result.state === "granted") {
+			  navigator.geolocation.getCurrentPosition(success, errors, options);
+			} else if (result.state === "prompt") {
+			  navigator.geolocation.getCurrentPosition(success, errors, options);
+			} else if (result.state === "denied") {
+				getlocationByIp();
+			}
+			result.onchange = function () {
+			//   console.log(result.state);
+			};
+		  });
+	  } else {
+		alert("Sorry Not available!");
+	  }
+	}, [])
+
+
+	
 
 	return (
 		<div className="Register">
