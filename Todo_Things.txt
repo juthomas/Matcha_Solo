@@ -9,6 +9,8 @@ uuid npm lib to create random uid
 
 ->Mail confirmation => Form ✅
 
+->token dans mail confirmation
+
 ->Styles pour les boutons et tout dans un css a part
 
 Sql relationships (tab "Relationships")
