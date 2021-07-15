@@ -1,6 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const db = require("../config/db");
+const multer = require('multer');
+const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const Jimp = require("jimp")
+
+var storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+	cb(null, 'public')
+  },
+  filename: function (req, file, cb) {
+	cb(null, file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage }).array('file')
 
 // const mysql2 = require('mysql2/promise');
 
@@ -27,12 +43,91 @@ router.post("/login", (req, res) => {
 					res.json({ loggedIn: false, message: "Bad mail/password" });
 				}
 			}
-			else {
+			else 
+			{
 				res.json({ loggedIn: false, message: "mail doesnt exist" });
 			}
 			console.log(err);
 		});
 })
+
+router.post("/get_profile", (req, res) => {
+	console.log("get profile");
+	const userId = req.body.userId;
+	var profileData = [];
+	var img;
+	fs.readFile("./public/"+ userId + "_image1.PNG", function (err,data) {
+		if (err) {
+		  return console.log(err);
+		}
+		else
+			img = data;
+	  });
+	fs.readFile("./public/"+ userId + "_image1.jpeg", function (err,data) {
+		if (err) {
+		  return console.log(err);
+		}
+		else
+			img = data;
+	  });
+	db.query("SELECT * FROM Users WHERE id = ?", [userId],
+	(err, results) => {
+		var popularity = "";
+		var orientation = "";
+
+		if(results.numberofLikes > 10000000)
+			popularity = "Worshipped Galactic Entity 🐙";
+		else if(results.numberofLikes > 1000)
+			popularity = "Dad";
+		else if(results.numberofLikes > 500)
+			popularity = "King of Kings";
+		else if(results.numberofLikes > 100)
+			popularity = "Masterchief";
+		else if(results.numberofLikes > 50)
+			popularity = "Star";
+		else if(results.numberofLikes > 15)
+			popularity = "Amongus";
+		else if(results.numberofLikes > 5)
+			popularity = "Adventurer";
+		else
+			popularity = "NewComer";
+
+		if(results[0].orientation >= 0)
+		{
+			if(results[0].orientation > 1)
+				orientation = "Male";
+			else if(results[0].orientation == 1)
+				orientation = "Female";
+			else
+				orientation = "No Binary";
+		}
+		else
+			orientation = "Undefined";
+		profileData = 
+		{
+			name:results[0].name,
+			gender : results[0].gender,
+			orientation : orientation,
+			age : results[0].age,
+			city : "FSB 94120",
+			lastConnexion: results[0].lastConnexion,
+			image1: img,
+			image2:  results[0].image2,
+			image3:  results[0].image3,
+			size: results[0].size,
+			inspiration : results[0].inspiration,
+			technique : results[0].technique,
+			surname : results[0].surname,
+			description : results[0].description,
+			htags: results[0].htags,
+			popularity : popularity,
+		};
+		//console.log(results[0]);
+		//console.log(profileData);
+		res.json(profileData);
+	});
+})
+
 
 router.post("/get_relationships", (req, res) => {
 	console.log("get relations");
@@ -87,13 +182,22 @@ router.post("/get_previews", (req, res) =>
 	var previewDatas = [];
 	var relationshipsIds = [];
 	var currentName = "";
-	db.query("SELECT a.id, a.Message, a.sender, a.receiver, a.friend_id FROM Messages a LEFT JOIN Messages b ON (a.friend_id = b.friend_id AND a.id < b.id) WHERE b.id is null AND (a.sender = 1 OR a.receiver = 1) ORDER BY a.id DESC	", [userId, userId, userId],
+	db.query("SELECT  * FROM ( SELECT  *, ROW_NUMBER() OVER (PARTITION BY friend_id ORDER BY time_stamp DESC) rn FROM messages WHERE (receiver_id = ? OR sender_id = ?)) x WHERE x.rn = 1", [userId, userId],
 	(err, results) => {
 		if (err) {
 			console.log(err);
 		}
 		if (results.length) {
-		
+			results.forEach((elem) => {
+				previewDatas.push({
+					id: elem.receiver_id != userId ? elem.receiver_id : elem.sender_id,
+					message: elem.Message,
+					name: elem.receiver_id != userId ? elem.receiver_name : elem.sender_name,
+				});
+			})
+			console.log("get_previews");
+			console.log(previewDatas);
+			res.json(previewDatas);
 		}
 	})
 }
@@ -124,20 +228,56 @@ router.post("/get_messages", (req, res) => {
 			});
 })
 
-router.post("/send_message", (req, res) => {
-	console.log("send message");
+router.post('/upload', (req, res) => {
+
+	console.log("prout");
+	//console.log(req.body);
+    upload(req, res, function (err) {
+           if (err instanceof multer.MulterError) {
+               return res.status(500).json(err)
+           } else if (err) {
+               return res.status(500).json(err)
+		   }
+      return res.status(200).send(req.file)
+    })
+});
+
+router.post("/update_profile", (req, res) => {
+	console.log("modify profile");
 	const userId = req.body.userId;
-	const friendId = req.body.friendId;
-	const message = req.body.message.newMessage;
-	const name = req.body.name;
-	console.log(message);
-	db.query("INSERT INTO Messages (sender_id, receiver_id, Message) VALUES (?, ?, ?);",
-			[userId, friendId, message, name],
+	//console.log(req.body);
+	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ? WHERE (id = ?)",
+			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname,req.body.age, req.body.description, req.body.htags, userId],
 		(err, results) => {
 			if (err) {
 				console.log(err);
 			}
 			});
+})
+
+router.post("/send_message", (req, res) => {
+	console.log("send message");
+	const userId = req.body.userId;
+	const friendId = req.body.friendId.currentChatId;
+	const message = req.body.message.newMessage;
+	const name = req.body.name;
+	console.log(message);
+	db.query("SELECT idRelationships FROM Relationships WHERE ((user_id = ? AND partner_id = ?) OR (user_id = ? AND partner_id = ?)) ",
+			[userId, friendId, friendId, userId],
+		(err, results) => {
+			console.log(results[0].idRelationships);
+			db.query("INSERT INTO Messages (sender_id, receiver_id, Message, friend_id) VALUES (?, ?, ?, ?);",
+			[userId, friendId, message, results[0].idRelationships],
+			(err2, results2) => {
+				if (err) {
+					console.log(err);
+				}
+			});
+	if (err) {
+		console.log(err);
+	}
+	});
+
 })
 
 

@@ -4,6 +4,7 @@ import Register from "./pages/Register/Register"
 import Start from "./pages/Start/Start"
 import Navbar from "./components/Navbar/Navbar"
 import Login from "./pages/Login/Login"
+import Profile from "./pages/Profile/Profile"
 import MailConfirmation from "./pages/MailConfirmation/MailConfirmation"
 import ResetCredentials from "./pages/ResetCredentials/ResetCredentials"
 import SetPassword from "./pages/SetPassword/SetPassword"
@@ -27,6 +28,7 @@ function App() {
 				<Route path="/loggedin"  render={() => <Navbar highlight="1"/>}></Route>
 				<Route path="/loggedin/home" exact render={() => <Home/>}/>
 				<Route path="/loggedin/messages" exact render={() => <Messages/>}/>
+				<Route path="/loggedin/profile" exact render={() => <Profile/>}/>
 				{/* 
 				<Route path="/upload" exact render={() => <Upload/>}/>
 				<Route path="/register" exact render={() => <Register/>}/>
