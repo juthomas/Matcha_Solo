@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react'
 import "./Profile.css"
 import { config } from "react-spring";
 import Carousel from "react-spring-3d-carousel";
-import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Axios from 'axios'
-import moment from 'moment'
 
 function Profile() {
 
     const [goToSlide, setGoToSlide] = useState(0);
-    const [offsetRadius, setOffSetRadius] = useState(2);
-    const [showNavigation, setShowNavigation] = useState(true);
-    const [idProfile, setIdProfile] = useState(-1);
-    const [currentProfile, setCurrentProfile] = useState([]);
 
     const [{image1, data1}, setImage1] = useState({image1: process.env.PUBLIC_URL + "/img/No_image.png", data1:null});
     const [{image2, data2}, setImage2] = useState({image2: process.env.PUBLIC_URL + "/img/No_image.png", data2:null});
@@ -34,23 +28,22 @@ function Profile() {
     const [name, setName] = useState("Undefined");
     const [editMod, setEditMod] = useState(false);
     const [currentDescription, setCurrentDescription] = useState("");
-    const [uploadData, setUploadData] = useState();
 
     function setImage(index, file)
     {
         const userId = 292;
         // console.log(file.name.split('.').pop());
-        if(index == 1)
+        if(index === 1)
         {
             const newFile1 = new File([file], userId + "_image1." + file.name.split('.').pop(), {type: file.type});
             setImage1({image1:URL.createObjectURL(newFile1),data1:newFile1});
         }
-        else if(index == 2)
+        else if(index === 2)
         {
             const newFile2 = new File([file], userId + "_image2." + file.name.split('.').pop(), {type: file.type});
             setImage2({image2:URL.createObjectURL(newFile2), data2:newFile2});
         }
-        else if(index == 3)
+        else if(index === 3)
         {
             const newFile3 = new File([file], userId + "_image3." + file.name.split('.').pop(), {type: file.type});
             setImage3({image3:URL.createObjectURL(newFile3),data3:newFile3})
@@ -63,11 +56,11 @@ function Profile() {
             key:0,
             content: 
                 <div className="flapImage" id="idHot">                        
-                    <img src={image1}  alt="image1" style={{overflow:"hidden"}}/>
-                    {goToSlide == 0 && editMod ? 
+                    <img src={image1}  alt="image1" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
+                    {goToSlide === 0 && editMod ? 
                     <label htmlFor="icon-button-file"> 
-                         <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) =>  setImage(1, e.target.files[0])}/>
-                        <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} />
+                        <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) =>  setImage(1, e.target.files[0])}/>
+                        <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image1" />
                     </label>: null 
                     }
                 </div>
@@ -76,11 +69,11 @@ function Profile() {
             key:1,
             content:    
             <div className="flapImage" id="idHot">                        
-            <img src={image2}  alt="image2" style={{overflow:"hidden"}}/>
-            {goToSlide == 1 && editMod ?
+            <img src={image2}  alt="image2" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
+            {goToSlide === 1 && editMod ?
             <label htmlFor="icon-button-file"> 
                 <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(2, e.target.files[0])}/> 
-                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} />
+                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image2" />
             </label>: null 
             }
         </div>
@@ -89,11 +82,11 @@ function Profile() {
             key:2,
             content: 
             <div className="flapImage" id="idHot">                        
-            <img src={image3}  alt="image3" style={{overflow:"hidden"}}/>
-            {goToSlide == 2 && editMod ?
+            <img src={image3}  alt="image3" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
+            {goToSlide === 2 && editMod ?
             <label htmlFor="icon-button-file"> 
                 <input accept="*.png *.jpg *.jpeg" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(3, e.target.files[0])}/>
-                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} />
+                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image3"/>
             </label>: null 
             }
         </div>
@@ -134,8 +127,6 @@ function Profile() {
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
         Axios.post(urlPrefix + "/user/get_profile", { userId: 292 })
             .then((response) => {
-                setCurrentProfile(response);
-
                 setGender(response.data.gender);
                 setOrientation(response.data.orientation);
                 setSize(response.data.size);
@@ -196,8 +187,8 @@ function Profile() {
                 <Carousel
                     slides={slides}
                     goToSlide={goToSlide}
-                    offsetRadius={offsetRadius}
-                    showNavigation={showNavigation}
+                    offsetRadius={2}
+                    showNavigation={true}
                     animationConfig={config.gentle}
                 />
             </div>
