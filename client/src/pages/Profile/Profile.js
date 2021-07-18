@@ -48,7 +48,7 @@ function Profile() {
         else if(index == 2)
         {
             const newFile2 = new File([file], userId + "_image2." + file.name.split('.').pop(), {type: file.type});
-            setImage2({image2:URL.createObjectURL(newFile2),data2:newFile2})
+            setImage2({image2:URL.createObjectURL(newFile2), data2:newFile2});
         }
         else if(index == 3)
         {
@@ -105,14 +105,24 @@ function Profile() {
 
     function upload_image()
     {
+        
+        var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
         const data = new FormData();
         if(data1)
+        {
             data.append('file', data1);
+            setImage1({image1: urlPrefix + "/" + data1.name, data1:data1})
+        }
         if(data2)
+        {
             data.append('file', data2);
+            setImage2({image2: urlPrefix + "/" + data2.name, data2:data2});
+        }
         if(data3)
+        {
             data.append('file', data3);
-        var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+            setImage3({image3: urlPrefix + "/" + data3.name, data3:data3});
+        }
         Axios.post(urlPrefix + "/user/upload", data)
       .then(res => { // then print response status
         console.log(res.statusText)
@@ -138,6 +148,9 @@ function Profile() {
                 setName(response.data.name);
                 setCity(response.data.city);
                 setCurrentDescription(response.data.description);
+                setImage1({image1:response.data.image1, data1: data1})
+                setImage2({image2:response.data.image2, data2: data2})
+                setImage3({image3:response.data.image3, data3: data3})
         }, (error) => {
             console.log(error);
           }
@@ -146,17 +159,27 @@ function Profile() {
 
     function update_profile()
     {
+        //console.log(image2);
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-        Axios.post(urlPrefix + "/user/update_profile", { userId: 292, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, description:currentDescription}).then((response) => {
-            console.log(response);
-        })
         upload_image();
+        var name1 = image1;
+        var name2 = image2;
+        var name3 = image3;
+        if(data1)
+            name1 = urlPrefix + "/" + data1.name;
+        if(data2)
+            name2 = urlPrefix + "/" + data2.name;
+        if(data3)
+            name3 = urlPrefix + "/" + data3.name;
+        Axios.post(urlPrefix + "/user/update_profile", { userId: 292, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, description:currentDescription}).then((response) => {
+            refreshPage();
+        })
+        refreshPage();
     }
 
     useEffect(() => {
             refreshPage();
         }, [])
-
 
     return (
         <div className="backgroundProfile">

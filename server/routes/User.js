@@ -5,7 +5,6 @@ const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const Jimp = require("jimp")
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -55,21 +54,6 @@ router.post("/get_profile", (req, res) => {
 	console.log("get profile");
 	const userId = req.body.userId;
 	var profileData = [];
-	var img;
-	fs.readFile("./public/"+ userId + "_image1.PNG", function (err,data) {
-		if (err) {
-		  return console.log(err);
-		}
-		else
-			img = data;
-	  });
-	fs.readFile("./public/"+ userId + "_image1.jpeg", function (err,data) {
-		if (err) {
-		  return console.log(err);
-		}
-		else
-			img = data;
-	  });
 	db.query("SELECT * FROM Users WHERE id = ?", [userId],
 	(err, results) => {
 		var popularity = "";
@@ -103,7 +87,7 @@ router.post("/get_profile", (req, res) => {
 		}
 		else
 			orientation = "Undefined";
-		profileData = 
+			profileData = 
 		{
 			name:results[0].name,
 			gender : results[0].gender,
@@ -111,7 +95,7 @@ router.post("/get_profile", (req, res) => {
 			age : results[0].age,
 			city : "FSB 94120",
 			lastConnexion: results[0].lastConnexion,
-			image1: img,
+			image1: results[0].image1,
 			image2:  results[0].image2,
 			image3:  results[0].image3,
 			size: results[0].size,
@@ -230,9 +214,8 @@ router.post("/get_messages", (req, res) => {
 
 router.post('/upload', (req, res) => {
 
-	console.log("prout");
-	//console.log(req.body);
     upload(req, res, function (err) {
+		
            if (err instanceof multer.MulterError) {
                return res.status(500).json(err)
            } else if (err) {
@@ -245,9 +228,9 @@ router.post('/upload', (req, res) => {
 router.post("/update_profile", (req, res) => {
 	console.log("modify profile");
 	const userId = req.body.userId;
-	//console.log(req.body);
-	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ? WHERE (id = ?)",
-			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname,req.body.age, req.body.description, req.body.htags, userId],
+	console.log(req.body.image2);
+	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ?, image1 = ?, image2 = ?, image3 = ? WHERE (id = ?)",
+			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname,req.body.age, req.body.description, req.body.htags, req.body.image1, req.body.image2, req.body.image3, userId],
 		(err, results) => {
 			if (err) {
 				console.log(err);
