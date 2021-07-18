@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useParams, useHistory} from "react-router-dom";
 import Axios from 'axios'
 
 function MailLink() {
 	let { id } = useParams();
-	var [mailRegistred, setMailRegistred] = useState("Nope");
 	let history = useHistory();
 
 	// var mailRegistred = "Nope";
@@ -35,7 +34,6 @@ function MailLink() {
 		<div>
 			ID CONFIRMED
 			{id}
-			{mailRegistred}
 		</div>
 	)
 }

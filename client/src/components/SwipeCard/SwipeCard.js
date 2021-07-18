@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import "./SwipeCard.css"
 import $ from "jquery"
 import Axios from "axios"
-import useLocalStorage from "../../hooks/useLocalStorage"
 
 // import reactElementToJSXString from 'react-element-to-jsx-string';
 

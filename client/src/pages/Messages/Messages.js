@@ -3,7 +3,7 @@ import "./Messages.css"
 import Axios from 'axios'
 
 function Messages() {
-    const [relationList, setRelationList] = useState([]);
+    const [, setRelationList] = useState([]);
 
 
     // document.querySelector('.chat[data-chat=person2]').classList.add('active-chat');
@@ -62,64 +62,6 @@ function Messages() {
                 }, [])
                 return (
                         <div className="wrapper">
-                        <div className="container">
-                            <div className="left">
-                                <div className="top">
-                                    <input type="text" placeholder="Search" />
-                                    <a href="javascript:;" className="search"></a>
-                                </div>
-                                <ul className="people">
-                                    {relationList}
-                                </ul>
-                            </div>
-                            <div className="right">
-                                <div className="top"><span>To: <span className="name">Dog Woofson</span></span></div>
-    
-                                <div className="chat active-chat" data-chat="person4">
-
-                                    <div className="conversation-start">
-                                        <span>Yesterday, 4:10 PM</span>
-                                    </div>
-                                    <div className="bubble me">
-                                        Hey human!
-                                    </div>
-                                    <div className="bubble me">
-                                        Umm... Someone took a shit in the hallway.
-                                    </div>
-                                    <div className="conversation-start">
-                                        <span>Yesterday, 4:20 PM</span>
-                                    </div>
-                                    <div className="bubble me">
-                                        Hey human!
-                                    </div>
-                                    <div className="bubble me">
-                                        Umm... Someone took a shit in the hallway.
-                                    </div>
-                                    <div className="bubble you">
-                                        ... what.
-                                    </div>
-                                    <div className="bubble you">
-                                        Are you serious?
-                                    </div>
-                                    <div className="bubble me">
-                                        I mean...
-                                    </div>
-                                    <div className="conversation-start">
-                                        <span>Yesterday, 4:30 PM</span>
-                                    </div>
-                                    <div className="bubble me">
-                                        It’s not that bad...
-                                    </div>
-                                </div>
-                              
-                                <div className="write">
-                                    <a href="javascript:;" className="write-link attach"></a>
-                                    <input type="text" />
-                                    <a href="javascript:;" className="write-link smiley"></a>
-                                    <a href="javascript:;" className="write-link send"></a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
         )
