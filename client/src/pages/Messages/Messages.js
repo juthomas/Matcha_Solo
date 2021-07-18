@@ -8,10 +8,6 @@ function Messages() {
     const [newMessage, setNewMessage] = useState("");
     const [currentChatId, setCurrentChatId] = useState(-1);
 
-    function handleChange(currentMessage) {
-        setNewMessage(currentMessage);
-      }
-
 
     useEffect(() => {
             var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
@@ -47,7 +43,7 @@ function Messages() {
                     .then((response) => {                         
                         var tmpMessageList = response.data.map((item, key) => {
                             return (
-                                <div className={item.id == 292 ? "bubble me" : "bubble you"}>
+                                <div className={item.id === 292 ? "bubble me" : "bubble you"}>
                                     {item.message}
                                 </div>
                             );
@@ -71,32 +67,6 @@ function Messages() {
                                 <div className="chatWrap">
                                 <div className="chat active-chat" data-chat="person4">
                                 {messageList}
-                                    {/* <div className="bubble me">
-                                        Hey human!
-                                    </div>
-                                    <div className="bubble me">
-                                        Umm... Someone took a shit in the hallway.
-                                    </div>
-                                
-                                    <div className="bubble me">
-                                        Hey human!
-                                    </div>
-                                    <div className="bubble me">
-                                        Umm... Someone took a shit in the hallway.
-                                    </div>
-                                    <div className="bubble you">
-                                        ... what.
-                                    </div>
-                                    <div className="bubble you">
-                                        Are you serious?
-                                    </div>
-                                    <div className="bubble me">
-                                        I mean...
-                                    </div>
-                                
-                                    <div className="bubble me">
-                                        It’s not that bad...
-                                    </div> */}
                                 </div>
                                 </div>
                                 <div className="write">
@@ -111,7 +81,6 @@ function Messages() {
                                                 setNewMessage("");
                                             }
                                      }} />
-                                    <a href="javascript:;" className="write-link send"></a>
                                 </div>
                             </div>
                         </div>

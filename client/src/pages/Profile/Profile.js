@@ -60,7 +60,7 @@ function Profile() {
                     {goToSlide === 0 && editMod ? 
                     <label htmlFor="icon-button-file"> 
                         <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) =>  setImage(1, e.target.files[0])}/>
-                        <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image1" />
+                        <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image1" />
                     </label>: null 
                     }
                 </div>
@@ -73,7 +73,7 @@ function Profile() {
             {goToSlide === 1 && editMod ?
             <label htmlFor="icon-button-file"> 
                 <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(2, e.target.files[0])}/> 
-                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image2" />
+                <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image2" />
             </label>: null 
             }
         </div>
@@ -86,7 +86,7 @@ function Profile() {
             {goToSlide === 2 && editMod ?
             <label htmlFor="icon-button-file"> 
                 <input accept="*.png *.jpg *.jpeg" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(3, e.target.files[0])}/>
-                <img style={{overflow:"hidden"}} src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image3"/>
+                <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image3"/>
             </label>: null 
             }
         </div>
