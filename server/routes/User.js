@@ -29,16 +29,39 @@ router.post("/login", async (req, res) => {
 							id: results[0].id,
 						});
 					} else {
-						res.json({
-							error: false,
-							login: login,
-							id: results[0].id,
-							token: jwt.sign(
-								{ userId: results[0].id },
-								process.env.TOKEN_SECRET,
-								{ expiresIn: "2h" }
-							),
-						});
+						// res.json({
+						// 	error: false,
+						// 	login: login,
+						// 	id: results[0].id,
+						// 	token: jwt.sign(
+						// 		{ userId: results[0].id },
+						// 		process.env.TOKEN_SECRET,
+						// 		{ expiresIn: "2h" }
+						// 	),
+						// });
+
+						db.query(
+							"UPDATE Users SET lastConnection = ? WHERE id = ?",
+							[getFormattedLocalTime(),results[0].id],
+							(err2) => {
+								if (err2) {
+									console.log(err2);
+								}
+								res.json({
+									error: false,
+									login: login,
+									id: results[0].id,
+									token: jwt.sign(
+										{ userId: results[0].id },
+										process.env.TOKEN_SECRET,
+										{ expiresIn: "2h" }
+									)
+								});
+							}
+						);
+
+
+
 					}
 				} else {
 					res.json({ error: true, message: "Bad login/password" });
@@ -387,8 +410,8 @@ router.post("/register", async (req, res) => {
 					}
 					if (!results3.length) {
 						db.query(
-							"INSERT INTO Users (username, name, lastname, mail, password, verification_code, latitude, longitude, dateOfCreation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-							[login, firsname, lastname, mail, password, code, latitude, longitude, getFormattedLocalTime()],
+							"INSERT INTO Users (username, name, lastname, mail, password, verification_code, latitude, longitude, dateOfCreation, lastConnection) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+							[login, firsname, lastname, mail, password, code, latitude, longitude, getFormattedLocalTime(), getFormattedLocalTime()],
 							(err2, results2) => {
 								if (err2) {
 									console.log(err2);
