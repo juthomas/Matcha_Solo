@@ -62,6 +62,8 @@ function MailConfirmation() {
 			console.log("response :", response);
 			if (response.data.result === true)
 			{
+				localStorage.setItem("meater-token", response.data.token);
+				localStorage.setItem("meater-id", response.data.id);
 				history.push("/loggedin/home");
 			}
 			else

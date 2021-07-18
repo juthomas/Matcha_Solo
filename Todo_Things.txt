@@ -9,11 +9,13 @@ uuid npm lib to create random uid
 
 ->Mail confirmation => Form ✅
 
-->token dans mail confirmation
+->token dans mail confirmation ✅
 
 ->Styles pour les boutons et tout dans un css a part
 
 Sql relationships (tab "Relationships")
+
+->Prblm de token dans le truc du code ✅
 
 ->Todo => tokens https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466557-creez-des-tokens-dauthentification
 

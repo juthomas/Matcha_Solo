@@ -223,7 +223,13 @@ router.post("/mailconfirmation", (req, res) => {
 				}
 			);
 		}
-		res.send({ result: results1[0].verification_code === code });
+		res.send({ result: results1[0].verification_code === code ,
+			id: results1[0].id,
+			token: jwt.sign(
+				{ userId: results1[0].id },
+				process.env.TOKEN_SECRET,
+				{ expiresIn: "2h" }
+			),});
 	});
 	// res.send("OK");
 });
@@ -288,6 +294,24 @@ function sendConfonfirmationMail(urlPrefix, mail, login, id, code) {
 			console.log("Email sent: " + info.response);
 		}
 	});
+}
+
+/**
+ * Get Formatted time as :
+ * YYYY-MM-DD HH:MM:SS
+ * @return string
+ */
+function getFormattedLocalTime()
+{
+	let date_object = new Date();
+	let date = ("0" + date_object.getDate()).slice(-2);
+	let month = ("0" + (date_object.getMonth() + 1)).slice(-2);
+	let year = date_object.getFullYear();
+	let hours =  ("0" + date_object.getHours()).slice(-2);
+	let minutes =  ("0" + date_object.getMinutes()).slice(-2);
+	let seconds =  ("0" + date_object.getSeconds()).slice(-2);
+
+	return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 }
 
 router.post("/register", async (req, res) => {
@@ -363,8 +387,8 @@ router.post("/register", async (req, res) => {
 					}
 					if (!results3.length) {
 						db.query(
-							"INSERT INTO Users (username, name, lastname, mail, password, verification_code, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-							[login, firsname, lastname, mail, password, code, latitude, longitude],
+							"INSERT INTO Users (username, name, lastname, mail, password, verification_code, latitude, longitude, dateOfCreation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+							[login, firsname, lastname, mail, password, code, latitude, longitude, getFormattedLocalTime()],
 							(err2, results2) => {
 								if (err2) {
 									console.log(err2);
