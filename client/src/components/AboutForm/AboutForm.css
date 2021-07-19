@@ -1,0 +1,13 @@
+.AboutForm
+{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Vollkorn SC', serif;
+    font-style: normal;
+    font-weight: normal;
+    color:white;
+    text-align: left;
+    justify-content: left;
+    align-items: center;
+}

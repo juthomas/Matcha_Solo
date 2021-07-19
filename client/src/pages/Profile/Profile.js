@@ -5,6 +5,8 @@ import Carousel from "react-spring-3d-carousel";
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Axios from 'axios'
+import ImageDisplay from "../../components/ImageDisplay/ImageDisplay"
+import AboutForm from "../../components/AboutForm/AboutForm"
 
 function Profile() {
 
@@ -32,7 +34,6 @@ function Profile() {
     function setImage(index, file)
     {
         const userId = 292;
-        // console.log(file.name.split('.').pop());
         if(index === 1)
         {
             const newFile1 = new File([file], userId + "_image1." + file.name.split('.').pop(), {type: file.type});
@@ -50,46 +51,21 @@ function Profile() {
         }
     }
 
-    const imageFldr = process.env.PUBLIC_URL + "/img/";
     const slides = [
         {
             key:0,
             content: 
-                <div className="flapImage" id="idHot">                        
-                    <img src={image1}  alt="image1" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
-                    {goToSlide === 0 && editMod ? 
-                    <label htmlFor="icon-button-file"> 
-                        <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) =>  setImage(1, e.target.files[0])}/>
-                        <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image1" />
-                    </label>: null 
-                    }
-                </div>
+            <ImageDisplay image={image1} onChange={(e) =>  setImage(1, e.target.files[0])} currentSlide={goToSlide === 0} editMod={editMod}/>
         },
         {
             key:1,
             content:    
-            <div className="flapImage" id="idHot">                        
-            <img src={image2}  alt="image2" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
-            {goToSlide === 1 && editMod ?
-            <label htmlFor="icon-button-file"> 
-                <input accept="image/*" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(2, e.target.files[0])}/> 
-                <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image2" />
-            </label>: null 
-            }
-        </div>
+            <ImageDisplay image={image2} onChange={(e) =>  setImage(2, e.target.files[0])} currentSlide={goToSlide === 1} editMod={editMod}/>
         },
         {
             key:2,
             content: 
-            <div className="flapImage" id="idHot">                        
-            <img src={image3}  alt="image3" style={{overflow:"hidden", minWidth: "100%", minHeight: "100%", resizeMode: 'contain'}}/>
-            {goToSlide === 2 && editMod ?
-            <label htmlFor="icon-button-file"> 
-                <input accept="*.png *.jpg *.jpeg" id="icon-button-file" type="file" style={{display: "none"}} onChange={(e) => setImage(3, e.target.files[0])}/>
-                <img src={imageFldr + "unnamed.png"} width="75%" style={{position:"absolute", top:"50%", left: "50%", transform: "translate(-50%, -50%)"}} alt="Click to add Image3"/>
-            </label>: null 
-            }
-        </div>
+            <ImageDisplay image={image3} onChange={(e) =>  setImage(3, e.target.files[0])} currentSlide={goToSlide === 2} editMod={editMod}/>
         },
     ].map((slide, index) => {
         return { ...slide, onClick: () => {setGoToSlide(index); console.log(index)} };
@@ -194,86 +170,26 @@ function Profile() {
             </div>
             <div className="AboutZone">
                 <div className="appName" style={{ fontSize: "36px" }}>{name}</div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Gender : {gender}</div> : <div style={{ fontSize: "30px"}}>Gender : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setGender(event.target.value)}
-                        value={gender}/></div>
-                    }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Orientation : {orientation}</div> : <div style={{ fontSize: "30px"}}>Orientation : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setOrientation(event.target.value)}
-                        value={orientation}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Sex Size : {size}</div> : <div style={{ fontSize: "30px"}}>Sex Size : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setSize(event.target.value)}
-                        value={size}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Inspiration : {orientation}</div> : <div style={{ fontSize: "30px"}}>Inspiration : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setInspiration(event.target.value)}
-                        value={inspiration}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Secret Technique : {technique}</div> : <div style={{ fontSize: "30px"}}>Secret Technique : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setTechnique(event.target.value)}
-                        value={technique}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Surname : {surname}</div> : <div style={{ fontSize: "30px"}}>Surname : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setSurname(event.target.value)}
-                        value={surname}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Popularity : {popularity}</div> : null
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Age : {age}</div> : <div style={{ fontSize: "30px"}}>Age : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setAge(event.target.value)}
-                        value={age}/></div>
-                }
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Last Connexion : {lastConnexion}</div> : null
-                } 
-                </div>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>City : {city}</div> : <div style={{ fontSize: "30px"}}>City : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setCity(event.target.value)}
-                        value={city}/></div>
-                }
-                </div>
+                <AboutForm subject="Gender :" value={gender} editMod={editMod} onChange={event => setGender(event.target.value)} canEdit={true} />
+                <AboutForm subject="Orientation :" value={orientation} editMod={editMod} onChange={event => setOrientation(event.target.value)} canEdit={true} />
+                <AboutForm subject="Sex Size :" value={size} editMod={editMod} onChange={event => setSize(event.target.value)} canEdit={true} />
+                <AboutForm subject="Inspiration :" value={inspiration} editMod={editMod} onChange={event => setInspiration(event.target.value)} canEdit={true} />
+                <AboutForm subject="Secret Technique :" value={technique} editMod={editMod} onChange={event => setTechnique(event.target.value)} canEdit={true} />
+                <AboutForm subject="Surname :" value={surname} editMod={editMod} onChange={event => setSurname(event.target.value)} canEdit={true} />
+                <AboutForm subject="Popularity :" value={popularity} editMod={editMod} canEdit={false} />
+                <AboutForm subject="Age :" value={age} editMod={editMod} onChange={event => setAge(event.target.value)} canEdit={true}/>
+                <AboutForm subject="Last Connexion :" value={lastConnexion} editMod={editMod} canEdit={false} />
+                <AboutForm subject="City :" value={city} editMod={editMod} onChange={event => setCity(event.target.value)}/>
+                <AboutForm subject="Orientation :" value={orientation} editMod={editMod} onChange={event => setOrientation(event.target.value)}/>
                 { 
                         !editMod ? <div style={{ fontSize: "30px"}}>{currentDescription}</div> : <textarea className="AboutForm" style={{ backgroundColor:"white", color:"black", fontSize:"30px", height:"200px"}}
                         onChange={event => setCurrentDescription(event.target.value)}
                         value={currentDescription} />
                 }
                 <br/>
-                <div className="AboutForm">
-                { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>Tags : {hTags}</div> : <div style={{ fontSize: "30px"}}>Tags : <br/><textarea style={{ fontSize: "30px"}} 
-                        onChange={event => setHTags(event.target.value)}
-                        value={hTags}/></div>
-                }
-                </div >
+                <AboutForm subject="Tags :" value={hTags} editMod={editMod} onChange={event => setHTags(event.target.value)} canEdit={true}/>
                 {
+                    editMod ?
                     <button onClick={() => {
                     setEditMod(!editMod);
                     update_profile();
@@ -281,6 +197,7 @@ function Profile() {
                     }} style={{backgroundColor:"green", width:"100%", height:"100px", position: "relative", fontSize: "30px" }}>
                         Save Modification
                     </button>
+                    :null
                 }
             </div>
             <br/>

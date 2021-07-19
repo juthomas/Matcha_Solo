@@ -164,8 +164,9 @@ router.post("/get_previews", (req, res) =>
 {
 	const userId = req.body.userId;
 	var previewDatas = [];
-	var relationshipsIds = [];
-	var currentName = "";
+	var UsersIds = [];
+	var messageDatas = [];
+	var index = 0;
 	db.query("SELECT  * FROM ( SELECT  *, ROW_NUMBER() OVER (PARTITION BY friend_id ORDER BY time_stamp DESC) rn FROM messages WHERE (receiver_id = ? OR sender_id = ?)) x WHERE x.rn = 1", [userId, userId],
 	(err, results) => {
 		if (err) {
@@ -173,19 +174,44 @@ router.post("/get_previews", (req, res) =>
 		}
 		if (results.length) {
 			results.forEach((elem) => {
-				previewDatas.push({
-					id: elem.receiver_id != userId ? elem.receiver_id : elem.sender_id,
-					message: elem.Message,
-					name: elem.receiver_id != userId ? elem.receiver_name : elem.sender_name,
-				});
+				UsersIds.push(elem.receiver_id == userId ? elem.sender_id : elem.receiver_id);
+				messageDatas.push(elem.Message);
 			})
-			console.log("get_previews");
-			console.log(previewDatas);
-			res.json(previewDatas);
 		}
-	})
-}
-);
+		var whereIn = '(';
+			for (var i in UsersIds) {
+				if (i != UsersIds.length - 1) {
+					whereIn += "'" + UsersIds[i] + "',";
+				}
+				else {
+					whereIn += "'" + UsersIds[i] + "'";
+				}
+			}
+			whereIn += ')';
+			console.log(whereIn);
+			db.query("SELECT * FROM Users WHERE id IN " + whereIn, [], (err2, results2) => {
+				console.log(results2)
+				if (err) {
+					console.log(err);
+				}
+				else if(results2.length)
+				{
+					results2.forEach((elem) => {
+						previewDatas.push({
+						id: elem.id,
+						message: messageDatas[index],
+						name: elem.name,
+						src: elem.image1,
+						lastConnexion : elem.lastConnexion,
+						});
+						index++;
+					})
+					console.log(previewDatas);
+					res.json(previewDatas);
+				}
+			})
+		})
+	});
 
 router.post("/get_messages", (req, res) => {
 	console.log("get messages");
@@ -193,7 +219,7 @@ router.post("/get_messages", (req, res) => {
 	const friendId = req.body.friendId;
 	var messageData = [];
 
-	db.query("SELECT  * FROM messages WHERE   (receiver_id = ? AND sender_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY time_stamp", [userId, friendId, userId, friendId],
+	db.query("SELECT * FROM messages WHERE   (receiver_id = ? AND sender_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY time_stamp", [userId, friendId, userId, friendId],
 		(err, results) => {
 			if (err) {
 				console.log(err);
@@ -203,7 +229,7 @@ router.post("/get_messages", (req, res) => {
 					messageData.push({
 						id: elem.sender_id,
 						message: elem.Message,
-						name: elem.receiver_name
+						name: elem.receiver_name == userId ? elem.sender_name : elem.receiver_name,
 					});
 				})
 			}

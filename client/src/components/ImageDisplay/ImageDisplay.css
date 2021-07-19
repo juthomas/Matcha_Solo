@@ -1,0 +1,24 @@
+.flapImage{
+    margin:0 auto;
+    text-align:center;
+    top:0;
+    left:0;
+    height:500px;
+    width: 300px;
+    overflow:hidden;
+ }
+
+ .profileImage
+ {
+    overflow: hidden;
+    min-width: 100%;
+    min-height: 100%;
+ }
+
+ .addIcon
+ {
+    position:absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+ }
