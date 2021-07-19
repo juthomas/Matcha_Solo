@@ -337,6 +337,39 @@ function getFormattedLocalTime()
 	return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 }
 
+function convertBase(value, from_range, to_range) {
+	
+	var from_base = from_range.length;
+	var to_base = to_range.length;
+
+	var dec_value = value.split('').reverse().reduce(function (carry, digit, index) {
+	  if (from_range.indexOf(digit) === -1) throw new Error('Invalid digit `'+digit+'` for base '+from_base+'.');
+	  return carry += from_range.indexOf(digit) * (Math.pow(from_base, index));
+	}, 0);
+	
+	var new_value = '';
+	while (dec_value > 0) {
+	  new_value = to_range[dec_value % to_base] + new_value;
+	  dec_value = (dec_value - (dec_value % to_base)) / to_base;
+	}
+	return new_value || '0';
+  }
+
+function passwordIsValid(str){
+	// var regex = /[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]+/;
+	// return regex.test(str);
+	var look = '`0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}^\]';
+
+	if (!new RegExp("[^\s" + look + "]").test(str))
+	{
+		return (true)
+	}
+	else
+	{
+		return (false);
+	}
+}
+
 router.post("/register", async (req, res) => {
 	console.log("register button");
 
@@ -351,6 +384,23 @@ router.post("/register", async (req, res) => {
 	const mail = req.body.mail;
 	const latitude = req.body.latitude;
 	const longitude = req.body.longitude;
+
+	console.log("Password : ", req.body.password);
+
+	if (passwordIsValid(req.body.password))
+	{
+		console.log("Password is valid");
+	}
+	else
+	{
+		console.log("Password is not valid");
+	}
+
+	var poneytmp = convertBase('test', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]\\|;:\'"<>,.?/`~', 'poneyvif');
+
+	console.log(poneytmp);
+
+	console.log(convertBase(poneytmp, 'poneyvif', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]\\|;:\'"<>,.?/`~' ))
 
 
 	if (req.body.login.length < 4) {
@@ -390,6 +440,7 @@ router.post("/register", async (req, res) => {
 		return;
 	}
 
+	return;//////////////
 
 	const password = await bcrypt.hash(req.body.password, saltRounds);
 	var id = 0;
