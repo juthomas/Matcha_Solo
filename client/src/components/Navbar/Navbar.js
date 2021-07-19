@@ -16,7 +16,7 @@ function Navbar(props) {
 			<button onClick={(event) => {history.push("/loggedin/messages")}}>
 				<img  alt="message_icon" src={process.env.PUBLIC_URL + "/img/message_icon.svg"} />
 			</button>
-			<button onClick={(event) => {history.push("/")}}>
+			<button onClick={(event) => {history.push("/loggedin/profile")}}>
 				<img alt="profil_icon" src={process.env.PUBLIC_URL + "/img/profil_icon.svg"} />
 			</button>
 		

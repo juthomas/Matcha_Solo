@@ -3,67 +3,109 @@ import "./Messages.css"
 import Axios from 'axios'
 
 function Messages() {
-    const [, setRelationList] = useState([]);
+    const [relationList, setRelationList] = useState([]);
+    const [messageList, setMessageList] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [currentChatId, setCurrentChatId] = useState(-1);
+    const [currentChatName, setCurrentChatName] = useState("");
+    const [currentChatLastConnexion, setCurrentChatLastConnexion] = useState("");
+    const [lastKey, setLastKey] = useState(-1);
+    const [nameBegin, setNameBegin] = useState("");
 
+    function DisplayConnection(timestamp)
+    {
+        const time = Math.floor((Date.now() - new Date(timestamp)) / 1000 / 60 / 60);
+        if(time < 24)
+            return ("< 24h");
+        else if(time < 48)
+            return ("Yesterday");
+        else if(time < 168)
+            return ("This week");
+        return ("More than a week");
+    }
 
-    // document.querySelector('.chat[data-chat=person2]').classList.add('active-chat');
-    // document.querySelector('.person[data-chat=person2]').classList.add('active');
-    
-    // let friends = {
-    //   list: document.querySelector('ul.people'),
-    //   all: document.querySelectorAll('.left .person'),
-    //   name: '' },
-    
-    // chat = {
-    //   container: document.querySelector('.container .right'),
-    //   current: null,
-    //   person: null,
-    //   name: document.querySelector('.container .right .top .name') };
-    
-    
-    // friends.all.forEach(f => {
-    //   f.addEventListener('mousedown', () => {
-    //     f.classList.contains('active') || setAciveChat(f);
-    //   });
-    // });
-    
-    // function setAciveChat(f) {
-    //   friends.list.querySelector('.active').classList.remove('active');
-    //   f.classList.add('active');
-    //   chat.current = chat.container.querySelector('.active-chat');
-    //   chat.person = f.getAttribute('data-chat');
-    //   chat.current.classList.remove('active-chat');
-    //   chat.container.querySelector('[data-chat="' + chat.person + '"]').classList.add('active-chat');
-    //   friends.name = f.querySelector('.name').innerText;
-    //   chat.name.innerHTML = friends.name;
-    // }
 
     useEffect(() => {
             var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-
-            Axios.post(urlPrefix + "/user/get_relationships", { userId: 253 })
-                .then((response) => {
-                        console.log(response.data);
-
+                Axios.post(urlPrefix + "/user/get_previews", { userId: 292, nameBegin:{nameBegin} })
+                    .then((response) => {
                         var tmpRelationList = response.data.map((item, key) => {
                                 return (
-                                // <p key = { key } > { item.id }, { item.name }, { item.old } </p>)
-                                <li className="person" data-chat="person1">
-                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg" alt="" />
+                                <div key={key} className="person" data-chat="person1" onClick={() => {
+                                    setCurrentChatId(item.id);
+                                    setCurrentChatName(item.name);
+                                    setCurrentChatLastConnexion(DisplayConnection(item.lastConnexion));
+                                    console.log("Clicked");
+                                    }}>
+                                <img src={item.src ? item.src : process.env.PUBLIC_URL + "/img/No_image.png"} alt={item.name + " photo"} />
                                 <span className="name">{item.name}</span>
-                                <span className="time">????</span>
-                                <span className="preview"></span>
-                                </li>)
-                                
+                                <span className="time">{DisplayConnection(item.lastConnexion)}</span>
+                                <span className="preview">{item.message}</span>
+                                </div>)
                                 ;
-                                }); setRelationList(tmpRelationList);
-
+                                });
+                                setRelationList(tmpRelationList);
+                                if(tmpRelationList[0])
+                                    setCurrentChatId(tmpRelationList[0].id);
                         });
-                }, [])
+                }
+                , [nameBegin])
+
+        useEffect(() => {
+            console.log(currentChatId);
+            var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+                Axios.post(urlPrefix + "/user/get_messages", { userId: 292, friendId:currentChatId})
+                    .then((response) => {                         
+                        var tmpMessageList = response.data.map((item, key) => {
+                            return (
+                                <div key = {key} className={item.id === 292 ? "bubble me" : "bubble you"}>
+                                    {item.message}
+                                </div>
+                            );
+                        }); setMessageList(tmpMessageList);
+                        setLastKey(tmpMessageList.length);
+                    });
+        } ,[currentChatId])
+    
                 return (
                         <div className="wrapper">
-                    </div>
-
+                        <div className="container">
+                            <div className="left">
+                                <div className="top">
+                                    <input type="text" placeholder="Search" value={nameBegin} onChange={event => setNameBegin(event.target.value)} />
+                                </div>
+                                <div className="people">
+                                    {relationList}
+                                </div>
+                            </div>
+                            <div className="right">
+                            <div className="top"><span><span className="name">{currentChatName}       {currentChatLastConnexion}</span></span></div>
+                                <div className="chatWrap">
+                                <div className="chat active-chat" data-chat="person4">
+                                {messageList}
+                                </div>
+                                </div>
+                                {
+                                    currentChatName ?
+                                <div className="write">
+                                    <input type="text" placeholder="Press Enter to send" value={newMessage} onChange={event => setNewMessage(event.target.value)}
+                                        onKeyPress={event => {
+                                            if (event.key === 'Enter') {
+                                                var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+                                                Axios.post(urlPrefix + "/user/send_message", { userId: 292, friendId: {currentChatId}, message:{newMessage} }).then((response) => {
+                                                });
+                                                const newElement = <div key={lastKey + 1} className= {"bubble me"}> {newMessage} </div>;
+                                                setMessageList(messageList => [...messageList, newElement]);
+                                                setNewMessage("");
+                                                setLastKey(lastKey + 1);
+                                            }
+                                     }} />
+                                </div>
+                                :null
+                                }
+                            </div>
+                        </div>
+                        </div>
         )
     }
 
