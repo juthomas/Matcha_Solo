@@ -163,6 +163,7 @@ router.post("/get_relationships", (req, res) => {
 router.post("/get_previews", (req, res) =>
 {
 	const userId = req.body.userId;
+	const nameBegin = req.body.nameBegin;
 	var previewDatas = [];
 	var UsersIds = [];
 	var messageDatas = [];
@@ -189,14 +190,19 @@ router.post("/get_previews", (req, res) =>
 			}
 			whereIn += ')';
 			console.log(whereIn);
-			db.query("SELECT * FROM Users WHERE id IN " + whereIn, [], (err2, results2) => {
+			db.query("SELECT * FROM Users WHERE id IN " + whereIn, (err2, results2) => {
 				console.log(results2)
 				if (err) {
 					console.log(err);
 				}
-				else if(results2.length)
+				if(results2.length)
 				{
+					console.log(nameBegin.nameBegin);
 					results2.forEach((elem) => {
+						console.log(elem.name.startsWith("M"));
+						if(nameBegin.nameBegin === "" || elem.name.startsWith(nameBegin.nameBegin))
+						{
+							console.log("Wsh");
 						previewDatas.push({
 						id: elem.id,
 						message: messageDatas[index],
@@ -204,6 +210,7 @@ router.post("/get_previews", (req, res) =>
 						src: elem.image1,
 						lastConnexion : elem.lastConnexion,
 						});
+					}
 						index++;
 					})
 					console.log(previewDatas);

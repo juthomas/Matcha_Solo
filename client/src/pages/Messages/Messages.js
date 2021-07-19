@@ -10,6 +10,7 @@ function Messages() {
     const [currentChatName, setCurrentChatName] = useState("");
     const [currentChatLastConnexion, setCurrentChatLastConnexion] = useState("");
     const [lastKey, setLastKey] = useState(-1);
+    const [nameBegin, setNameBegin] = useState("");
 
     function DisplayConnection(timestamp)
     {
@@ -26,7 +27,7 @@ function Messages() {
 
     useEffect(() => {
             var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-                Axios.post(urlPrefix + "/user/get_previews", { userId: 292 })
+                Axios.post(urlPrefix + "/user/get_previews", { userId: 292, nameBegin:{nameBegin} })
                     .then((response) => {
                         var tmpRelationList = response.data.map((item, key) => {
                                 return (
@@ -44,10 +45,11 @@ function Messages() {
                                 ;
                                 });
                                 setRelationList(tmpRelationList);
-                                setCurrentChatId(tmpRelationList[0].id);
+                                if(tmpRelationList[0])
+                                    setCurrentChatId(tmpRelationList[0].id);
                         });
                 }
-                , [])
+                , [nameBegin])
 
         useEffect(() => {
             console.log(currentChatId);
@@ -70,7 +72,7 @@ function Messages() {
                         <div className="container">
                             <div className="left">
                                 <div className="top">
-                                    <input type="text" placeholder="Search" />
+                                    <input type="text" placeholder="Search" value={nameBegin} onChange={event => setNameBegin(event.target.value)} />
                                 </div>
                                 <div className="people">
                                     {relationList}
