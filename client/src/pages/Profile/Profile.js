@@ -15,6 +15,8 @@ function Profile() {
     const [{image1, data1}, setImage1] = useState({image1: process.env.PUBLIC_URL + "/img/No_image.png", data1:null});
     const [{image2, data2}, setImage2] = useState({image2: process.env.PUBLIC_URL + "/img/No_image.png", data2:null});
     const [{image3, data3}, setImage3] = useState({image3: process.env.PUBLIC_URL + "/img/No_image.png", data3:null});
+    const [{image4, data4}, setImage4] = useState({image4: process.env.PUBLIC_URL + "/img/No_image.png", data4:null});
+    const [{image5, data5}, setImage5] = useState({image5: process.env.PUBLIC_URL + "/img/No_image.png", data5:null});
 
     const [gender, setGender] = useState("Undefined");
     const [orientation, setOrientation] = useState("Undefined");
@@ -30,10 +32,11 @@ function Profile() {
     const [name, setName] = useState("Undefined");
     const [editMod, setEditMod] = useState(false);
     const [currentDescription, setCurrentDescription] = useState("");
+    //const [slides, setSlides] = useState([]);
 
     function setImage(index, file)
     {
-        const userId = 292;
+        const userId = 470;
         if(index === 1)
         {
             const newFile1 = new File([file], userId + "_image1." + file.name.split('.').pop(), {type: file.type});
@@ -48,6 +51,16 @@ function Profile() {
         {
             const newFile3 = new File([file], userId + "_image3." + file.name.split('.').pop(), {type: file.type});
             setImage3({image3:URL.createObjectURL(newFile3),data3:newFile3})
+        }
+        else if(index === 4)
+        {
+            const newFile4 = new File([file], userId + "_image4." + file.name.split('.').pop(), {type: file.type});
+            setImage4({image4:URL.createObjectURL(newFile4),data4:newFile4})
+        }
+        else if(index === 5)
+        {
+            const newFile5 = new File([file], userId + "_image5." + file.name.split('.').pop(), {type: file.type});
+            setImage5({image5:URL.createObjectURL(newFile5),data5:newFile5})
         }
     }
 
@@ -67,8 +80,18 @@ function Profile() {
             content: 
             <ImageDisplay image={image3} onChange={(e) =>  setImage(3, e.target.files[0])} currentSlide={goToSlide === 2} editMod={editMod}/>
         },
+        {
+            key:3,
+            content: 
+            <ImageDisplay image={image4} onChange={(e) =>  setImage(4, e.target.files[0])} currentSlide={goToSlide === 3} editMod={editMod}/>
+        },
+        {
+            key:4,
+            content: 
+            <ImageDisplay image={image5} onChange={(e) =>  setImage(5, e.target.files[0])} currentSlide={goToSlide === 4} editMod={editMod}/>
+        },
     ].map((slide, index) => {
-        return { ...slide, onClick: () => {setGoToSlide(index); console.log(index)} };
+        return { ...slide, onClick: () => {setGoToSlide(index); console.log(image5)} };
     });
 
 
@@ -92,16 +115,27 @@ function Profile() {
             data.append('file', data3);
             setImage3({image3: urlPrefix + "/" + data3.name, data3:data3});
         }
+        if(data4)
+        {
+            data.append('file', data4);
+            setImage4({image4: urlPrefix + "/" + data4.name, data4:data4});
+        }
+        if(data5)
+        {
+            data.append('file', data5);
+            setImage5({image5: urlPrefix + "/" + data5.name, data5:data5});
+        }
         Axios.post(urlPrefix + "/user/upload", data)
       .then(res => { // then print response status
         console.log(res.statusText)
       })
     }
 
-    function refreshPage()
+    function refreshPage(isInEdit)
     {
+        console.log(editMod);
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
-        Axios.post(urlPrefix + "/user/get_profile", { userId: 292 })
+        Axios.post(urlPrefix + "/user/get_profile", { userId: 470 })
             .then((response) => {
                 setGender(response.data.gender);
                 setOrientation(response.data.orientation);
@@ -115,9 +149,13 @@ function Profile() {
                 setName(response.data.name);
                 setCity(response.data.city);
                 setCurrentDescription(response.data.description);
-                setImage1({image1:response.data.image1, data1: data1})
-                setImage2({image2:response.data.image2, data2: data2})
-                setImage3({image3:response.data.image3, data3: data3})
+                setImage1({image1:response.data.images[0] ? response.data.images[0] : process.env.PUBLIC_URL + "/img/No_image.png", data1: null})
+                setImage2({image2:response.data.images[1] ? response.data.images[1] : process.env.PUBLIC_URL + "/img/No_image.png", data2: null})
+                setImage3({image3:response.data.images[2] ? response.data.images[2] : process.env.PUBLIC_URL + "/img/No_image.png", data3: null})
+                if(response.data.images[3])
+                    setImage4({image3:response.data.images[3], data4: null})
+                if(response.data.images[4])
+                    setImage5({image3:response.data.images[4], data5: null})
         }, (error) => {
             console.log(error);
           }
@@ -132,20 +170,25 @@ function Profile() {
         var name1 = image1;
         var name2 = image2;
         var name3 = image3;
+        var name4 = image4;
+        var name5 = image5;
         if(data1)
             name1 = urlPrefix + "/" + data1.name;
         if(data2)
             name2 = urlPrefix + "/" + data2.name;
         if(data3)
             name3 = urlPrefix + "/" + data3.name;
-        Axios.post(urlPrefix + "/user/update_profile", { userId: 292, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, description:currentDescription}).then((response) => {
-            refreshPage();
+        if(data4)
+            name4 = urlPrefix + "/" + data4.name;
+        if(data5)
+            name5 = urlPrefix + "/" + data5.name;
+        Axios.post(urlPrefix + "/user/update_profile", { userId: 470, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, image4:name4, image5:name5, description:currentDescription}).then((response) => {
+            refreshPage(!editMod);
         })
-        refreshPage();
     }
 
     useEffect(() => {
-            refreshPage();
+            refreshPage(false);
         }, [])
 
     return (
@@ -153,7 +196,8 @@ function Profile() {
         <div style={{backgroundColor:"red", width:"50px", height:"50px", right:"0", position: "absolute" }}></div>
         <button onClick={() => {
             setEditMod(!editMod);
-            refreshPage();
+            console.log("Edit Mode : " + editMod);
+            refreshPage(!editMod);
             }} style={{backgroundColor:"red", width:"50px", height:"50px", right:"0", position: "absolute" }}>
            {
             !editMod ? <EditIcon style={{width:"80%", height:"80%"}}/> : <ArrowBackIcon style={{width:"80%", height:"80%"}}/>
@@ -193,7 +237,7 @@ function Profile() {
                     <button onClick={() => {
                     setEditMod(!editMod);
                     update_profile();
-                    refreshPage();
+                    refreshPage(!editMod);
                     }} style={{backgroundColor:"green", width:"100%", height:"100px", position: "relative", fontSize: "30px" }}>
                         Save Modification
                     </button>

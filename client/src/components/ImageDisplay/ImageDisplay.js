@@ -3,7 +3,7 @@ import "./ImageDisplay.css"
 
 function ImageDisplay(props) {
 	return (
-        <div className="flapImage">                        
+        <div className="flapImage" style={{backgroundColor:"red"}}>                        
             <img src={props.image}  className="profileImage" alt={props.image} style={{resizeMode: 'contain'}}/>
             {
                 props.currentSlide && props.editMod ? 

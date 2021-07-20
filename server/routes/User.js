@@ -457,6 +457,7 @@ router.post("/get_profile", (req, res) => {
 	console.log("get profile");
 	const userId = req.body.userId;
 	var profileData = [];
+	console.log(userId);
 	db.query("SELECT * FROM Users WHERE id = ?", [userId],
 	(err, results) => {
 		var popularity = "";
@@ -479,28 +480,22 @@ router.post("/get_profile", (req, res) => {
 		else
 			popularity = "NewComer";
 
-		if(results[0].orientation >= 0)
-		{
-			if(results[0].orientation > 1)
-				orientation = "Male";
-			else if(results[0].orientation == 1)
-				orientation = "Female";
-			else
-				orientation = "No Binary";
-		}
-		else
-			orientation = "Undefined";
 			profileData = 
 		{
 			name:results[0].name,
 			gender : results[0].gender,
-			orientation : orientation,
+			orientation : results[0],orientation,
 			age : results[0].age,
 			city : "FSB 94120",
 			lastConnexion: results[0].lastConnexion,
-			image1: results[0].image1,
-			image2:  results[0].image2,
-			image3:  results[0].image3,
+			images : 
+			[
+				results[0].image1,
+				results[0].image2,
+				results[0].image3,
+				results[0].image4,
+				results[0].image5,
+			],
 			size: results[0].size,
 			inspiration : results[0].inspiration,
 			technique : results[0].technique,
