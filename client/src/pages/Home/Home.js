@@ -23,8 +23,11 @@ function Home() {
 	const [itemsState, setItemsState] = useState([]);
 	// const [token, ] = useLocalStorage('token');
 	// const [id,] = useLocalStorage('id');
+	// const [cardsCounter, setCardsCounter] = useState(0);
 
-	var cardsCounter = 0;//Faire un truc plus propre pour ca
+	var cardsCounter = useRef(0);
+
+	// var cardsCounter = 0;//Faire un truc plus propre pour ca
 	var animating = false;
 	// var numOfCards = 6;//
 	// window.numOfCards;
@@ -62,29 +65,37 @@ function Home() {
 		console.log("Id : ", id);
 		console.log("Relation type : ", relationType);
 	}
-
+	var button_clicked_ok = true;
 	function button_clicked() {
+		if (button_clicked_ok === false)
+		{
+			return;
+		}
 
+		button_clicked_ok = false;
 			var $currentCard = $(".CardContainer").children().not(".below").last();
 			console.log($currentCard);
 			// $cardParent.remove();
 		// Swipe a droite
 		// if (pullDeltaX >= decisionVal)
 		// {
-			console.log(cardsCounter, " : Liked")
-			console.log(profilesDatas.current[cardsCounter]);
-			add_friend(profilesDatas.current[cardsCounter].id, "super friends");
+			console.log(cardsCounter.current, " : Liked")
+			console.log(profilesDatas.current[cardsCounter.current]);
+			
+			if (profilesDatas.current[cardsCounter.current])
+			add_friend(profilesDatas.current[cardsCounter.current].id, "super friends");
 			$currentCard.css("transition-duration", "0.5s");
 			$currentCard.addClass("to-right");
 			
 			$currentCard.addClass("inactive");
 			
-			cardsCounter++;
+			cardsCounter.current++;
+			// setCardsCounter(cardsCounter.current + 1);
 			setTimeout(function () {
 				$currentCard.css("transition-duration", "0s");
 				$currentCard.addClass("below").removeClass("inactive to-left to-right");
-				if (cardsCounter === numberOfProfiles - 1) {
-					console.log("Reload js :", cardsCounter, " : ", numberOfProfiles)
+				if (cardsCounter.current === numberOfProfiles - 1) {
+					console.log("Reload js :", cardsCounter.current, " : ", numberOfProfiles)
 
 					$(".Card").removeClass("below");
 
@@ -92,18 +103,21 @@ function Home() {
 					getNewProfiles()
 					// Trouver le moyen de mettre cardCounter a 0 au moment au la 
 					// liste de cartes se rafraichit
-					cardsCounter = 0;
+					cardsCounter.current = 0;
+					// setCardsCounter(0);
 
 				}
 				if (cardsCounter === numberOfProfiles) {
 					console.log("Equal :", numberOfProfiles)
 
-					cardsCounter = 0;
+					cardsCounter.current = 0;
+					// setCardsCounter(0);
+
 					$(".Card").removeClass("below");
 
 				}
 
-
+				button_clicked_ok = true;
 
 			}, 500);
 			// console.log(cardsCounter, " : Liked")
@@ -115,45 +129,6 @@ function Home() {
 
 		return;
 
-		if (Math.abs(pullDeltaX) >= decisionVal) {
-			$card.addClass("inactive");
-
-			setTimeout(function () {
-				$card.addClass("below").removeClass("inactive to-left to-right");
-				cardsCounter++;
-				if (cardsCounter === numberOfProfiles - 1) {
-					console.log("Reload js :", cardsCounter, " : ", numberOfProfiles)
-
-					$(".Card").removeClass("below");
-
-					// setClicksNumber(c => c + 1);
-					getNewProfiles()
-					// Trouver le moyen de mettre cardCounter a 0 au moment au la 
-					// liste de cartes se rafraichit
-					cardsCounter = 0;
-
-				}
-				if (cardsCounter === numberOfProfiles) {
-					console.log("Equal :", numberOfProfiles)
-
-					cardsCounter = 0;
-					$(".Card").removeClass("below");
-
-				}
-			}, 300);
-		}
-
-		if (Math.abs(pullDeltaX) < decisionVal) {
-			$card.addClass("reset");
-		}
-
-		setTimeout(function () {
-			$card.attr("style", "").removeClass("reset")
-				.find(".CardChoice").attr("style", "");
-
-			pullDeltaX = 0;
-			animating = false;
-		}, 300);
 	};
 
 
@@ -298,26 +273,29 @@ function Home() {
 			if (pullDeltaX >= decisionVal)
 			{
 				$card.addClass("to-right");
-				console.log(cardsCounter, " : Liked")
-				console.log(profilesDatas.current[cardsCounter]);
-				add_friend(profilesDatas.current[cardsCounter].id, "friends")
+				console.log(cardsCounter.current, " : Liked")
+				console.log(profilesDatas.current[cardsCounter.current]);
+				add_friend(profilesDatas.current[cardsCounter.current].id, "friends")
 			} 
 			// Swipe a gauche
 			else if (pullDeltaX <= -decisionVal)
 			 {
 				$card.addClass("to-left");
-				console.log(cardsCounter, " : Disliked")
+				console.log(cardsCounter.current, " : Disliked")
 
 			}
 
 			if (Math.abs(pullDeltaX) >= decisionVal) {
 				$card.addClass("inactive");
 
-				cardsCounter++;
+				cardsCounter.current++;
+				// setCardsCounter(cardsCounter + 1);
+
+
 				setTimeout(function () {
 					$card.addClass("below").removeClass("inactive to-left to-right");
-					if (cardsCounter === numberOfProfiles - 1) {
-						console.log("Reload js :", cardsCounter, " : ", numberOfProfiles)
+					if (cardsCounter.current === numberOfProfiles - 1) {
+						console.log("Reload js :", cardsCounter.current, " : ", numberOfProfiles)
 
 						$(".Card").removeClass("below");
 
@@ -325,13 +303,22 @@ function Home() {
 						getNewProfiles()
 						// Trouver le moyen de mettre cardCounter a 0 au moment au la 
 						// liste de cartes se rafraichit
-						cardsCounter = 0;
+						cardsCounter.current = 0;
+
+
+						// setCardsCounter(0);
+
+
 
 					}
 					if (cardsCounter === numberOfProfiles) {
 						console.log("Equal :", numberOfProfiles)
 
-						cardsCounter = 0;
+						cardsCounter.current = 0;
+
+
+						// setCardsCounter(0);
+
 						$(".Card").removeClass("below");
 
 					}
