@@ -462,6 +462,8 @@ router.post("/get_profile", (req, res) => {
 		var popularity = "";
 		var orientation = "";
 
+
+		console.log(results);
 		if(results.numberofLikes > 10000000)
 			popularity = "Worshipped Galactic Entity 🐙";
 		else if(results.numberofLikes > 1000)

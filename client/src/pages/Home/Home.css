@@ -66,3 +66,251 @@
 .Home .CurrentMatch:hover{
 	background-color: blueviolet;
 } */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Home .SwipeCard {
+	/* position:fixed; */
+	z-index: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+
+.Home 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* html,
+body {
+  font-size: 62.5%;
+}
+
+body {
+  background: #63bdf7;
+} */
+
+/* .demo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30.6rem;
+  height: 54rem;
+  margin-left: -15.3rem;
+  margin-top: -27rem;
+  background: #f6f6f5;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+} */
+/* .demo__header {
+  height: 6rem;
+  background: #002942;
+} */
+
+.Home .Content {
+  overflow: hidden;
+	margin: 0 auto;
+	width: 100%;
+  position: relative;
+  height: 100%;
+  bottom: 0px;
+  left: 0px;
+  /* padding-top: 0.5rem; */
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.Home .CardContainer {
+  position:relative;
+  /* bottom: 1000px; */
+	left: 0px;
+	/* top: 100%; */
+	top: 10%;
+/* transform: translateY(-100%); */
+  /* width: 34rem; */
+  width: 70%;
+
+  /* height: 52rem; */
+  height: 70%;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.Home .Card {
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* bottom: 0; */
+  width: 100%;
+  height: 100%;
+  background-color: chartreuse;
+  transform-origin: 50% 100%;
+}
+
+.Home .Card.reset {
+  transition: transform 0.3s;
+  transform: translateX(0) !important;
+}
+
+.Home .Card.reset .CardChoice {
+  transition: opacity 0.3s;
+  opacity: 0 !important;
+}
+
+.Home .Card.inactive {
+  transition: transform 0.3s;
+}
+
+.Home .Card.to-left {
+  transform: translateX(-30rem) rotate(-30deg) !important;
+}
+
+.Home .Card.to-right {
+  transform: translate(30rem) rotate(30deg) !important;
+}
+
+.Home .Card.below {
+  z-index: 1;
+}
+
+/* .CardTop {
+  height: 20.5rem;
+  padding-top: 4rem;
+}
+
+.CardTop.purple {
+  background: #7132b9;
+}
+
+.CardTop.blue {
+  background: #248cb6;
+}
+.CardTop.indigo {
+  background: #303f9f;
+}
+.CardTop.cyan {
+  background: #26c6da;
+}
+.CardTop.lime {
+  background: #afb42b;
+}
+.CardTop.brown {
+  background: #795548;
+} */
+
+.Home .CardImage {
+
+  height: 85%;
+  position: relative;
+}
+
+.Home .CardName {
+  /* text-align: center; */
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.Home .CardBottom {
+  height: 15%;
+  position: relative;
+  /* height: 11%; */
+  background: #ff0000;
+}
+
+.Home .CardChoice {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.Home .CardChoice:before {
+  /* content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin-left: -1rem;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: -2rem -3rem #fff, 2rem -3rem #fff; */
+}
+
+.Home .CardChoice:after {
+  /* content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4rem;
+  height: 1.5rem;
+  margin-left: -2rem;
+  border: 0.6rem solid #fff;
+  border-bottom: none;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem; */
+}
+
+.Home .CardContent {
+  height: 100%;
+}
+
+.Home .CardChoice.m--reject {
+  /* background: #ff945a; */
+}
+
+.Home .CardChoice.m--like {
+  /* background: #b1da96; */
+}
+
+.Home .CardChoice.m--like:after {
+  transform: scaleY(-1);
+}
+.Home .CardDrag {
+  z-index: 5;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+/* .demo__tip {
+  text-align: center;
+  font-size: 2.2rem;
+} */
+
+
+
+
+
+

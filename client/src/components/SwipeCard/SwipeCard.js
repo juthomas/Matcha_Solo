@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import "./SwipeCard.css"
 import $ from "jquery"
 import Axios from "axios"
+import {useHistory} from 'react-router-dom'
 
 // import reactElementToJSXString from 'react-element-to-jsx-string';
 
 function SwipeCard() {
-
+	let history = useHistory();
 	const [numberOfProfiles, setNumberOfProfiles] = useState(10);
 	// var numberOfProfiles = 10;
 	// const [profilesDatas, setProfilesDatas] = useState([]);
@@ -42,6 +43,11 @@ function SwipeCard() {
 	// useEffect((getNewProfiles), []);
 
 
+
+	function	add_friend(id, relationType)
+	{
+		//Add relation in Relationships table
+	}
 
 	const refreshProfilesItems = useCallback(() => {
 		console.log("beg reload");
@@ -117,6 +123,10 @@ function SwipeCard() {
 				profilesDatas.current = profilesDatas.current.concat(response.data)
 				
 				console.log(response.data)
+				if (response.data.error === true && response.data.message === "Invalid Token")
+				{
+					history.push("/login");
+				}
 				console.log(profilesDatas.current)
 				refreshProfilesItems()
 				setNumberOfProfiles(profilesDatas.current.length)
@@ -182,10 +192,18 @@ function SwipeCard() {
 
 		function release() {
 
-			if (pullDeltaX >= decisionVal) {
+
+			// Swipe a droite
+			if (pullDeltaX >= decisionVal)
+			{
 				$card.addClass("to-right");
 				console.log(cardsCounter, " : Liked")
-			} else if (pullDeltaX <= -decisionVal) {
+				console.log(profilesDatas.current[cardsCounter]);
+				add_friend(profilesDatas.current[cardsCounter].id, "friends")
+			} 
+			// Swipe a gauche
+			else if (pullDeltaX <= -decisionVal)
+			 {
 				$card.addClass("to-left");
 				console.log(cardsCounter, " : Disliked")
 
