@@ -568,7 +568,6 @@ router.post("/get_relationships", (req, res) => {
 				res.json(relationshipsData);
 			});
 		});
-})
 
 router.post("/get_previews", (req, res) =>
 {
@@ -583,7 +582,7 @@ router.post("/get_previews", (req, res) =>
 		if (err) {
 			console.log(err);
 		}
-		if (results.length) {
+		if (results) {
 			results.forEach((elem) => {
 				UsersIds.push(elem.receiver_id == userId ? elem.sender_id : elem.receiver_id);
 				messageDatas.push(elem.Message);
@@ -601,18 +600,15 @@ router.post("/get_previews", (req, res) =>
 			whereIn += ')';
 			console.log(whereIn);
 			db.query("SELECT * FROM Users WHERE id IN " + whereIn, (err2, results2) => {
-				console.log(results2)
 				if (err) {
 					console.log(err);
 				}
-				if(results2.length)
+				if(results2)
 				{
-					console.log(nameBegin.nameBegin);
+
 					results2.forEach((elem) => {
-						console.log(elem.name.startsWith("M"));
 						if(nameBegin.nameBegin === "" || elem.name.startsWith(nameBegin.nameBegin))
 						{
-							console.log("Wsh");
 						previewDatas.push({
 						id: elem.id,
 						message: messageDatas[index],
@@ -623,12 +619,31 @@ router.post("/get_previews", (req, res) =>
 					}
 						index++;
 					})
-					console.log(previewDatas);
-					res.json(previewDatas);
 				}
+				db.query("SELECT * FROM Users WHERE (id NOT IN " + whereIn + " AND EXISTS (SELECT * FROM Relationships WHERE ((user1_id = id AND Relationships.user2_id = ?) OR (Relationships.user1_id = ? AND Relationships.user2_id = id)))", [userId, userId], (err2, results3) => {
+					if(err)
+						console.log(err)
+					if(results3)
+					{
+						results3.forEach((elem) => {
+							if(nameBegin.nameBegin === "" || elem.name.startsWith(nameBegin.nameBegin))
+							{
+							previewDatas.push({
+							id: elem.id,
+							message: "Begin a conversation with " + elem.name,
+							name: elem.name,
+							src: elem.image1,
+							lastConnexion : elem.lastConnexion,
+							});
+						}
+					}
+				)}
 			})
+			console.log(previewDatas);
+			res.json(previewDatas);
 		})
 	});
+})
 
 router.post("/get_messages", (req, res) => {
 	console.log("get messages");
