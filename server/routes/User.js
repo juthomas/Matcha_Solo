@@ -25,7 +25,19 @@ var upload = multer({ storage: storage }).array('file')
 router.post("/login", async (req, res) => {
 	console.log("Login page");
 	const login = req.body.login;
-	const password = req.body.password;
+	// const password = req.body.password;
+	const input_base = 'poneyvif';
+	const output_base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]\\|;:\'"<>,.?/`~';
+	if (checkBaseValid(req.body.password, input_base) === false)
+	{
+		res.send({ error: true, message: "Invalid character" });
+		return;
+	} 
+
+	var convertedString = convertBase(req.body.password, input_base, output_base)
+	console.log("Converted Base : '" + convertedString + "'");
+
+
 
 	db.query(
 		"SELECT * FROM Users WHERE username = ?",
@@ -35,7 +47,7 @@ router.post("/login", async (req, res) => {
 				console.log("Error : " + err);
 			}
 			if (results.length) {
-				const comparaison = await bcrypt.compare(password, results[0].password);
+				const comparaison = await bcrypt.compare(convertedString, results[0].password);
 				if (comparaison) {
 					if (results[0].mail_verified === 0) {
 						res.json({
@@ -352,6 +364,44 @@ function getFormattedLocalTime()
 	return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 }
 
+
+function checkBaseValid(value, base)
+{
+	for (var i = 0; i < value.length; i++)
+	{
+		if (base.includes(value[i]))
+		{
+			console.log(value[i] + " : OK");
+		}
+		else
+		{
+			console.log(value[i] + " : NOT OK");
+			return (false)
+		}
+	}
+	return (true)
+}
+
+function convertBase(value, from_range, to_range) {
+	
+	var from_base = from_range.length;
+	var to_base = to_range.length;
+
+	var dec_value = value.split('').reverse().reduce(function (carry, digit, index) {
+	  if (from_range.indexOf(digit) === -1) throw new Error('Invalid digit `'+digit+'` for base '+from_base+'.');
+	  return carry += from_range.indexOf(digit) * (Math.pow(from_base, index));
+	}, 0);
+	
+	var new_value = '';
+	while (dec_value > 0) {
+	  new_value = to_range[dec_value % to_base] + new_value;
+	  dec_value = (dec_value - (dec_value % to_base)) / to_base;
+	}
+	return new_value || '0';
+}
+
+
+
 router.post("/register", async (req, res) => {
 	console.log("register button");
 
@@ -367,6 +417,18 @@ router.post("/register", async (req, res) => {
 	const latitude = req.body.latitude;
 	const longitude = req.body.longitude;
 
+	const input_base = 'poneyvif';
+	const output_base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]\\|;:\'"<>,.?/`~';
+
+
+	if (checkBaseValid(req.body.password, input_base) === false)
+	{
+		res.send({ error: true, message: "Invalid character" });
+		return;
+	} 
+
+	var convertedString = convertBase(req.body.password, input_base, output_base)
+	console.log("Converted Base : '" + convertedString + "'");
 
 	if (req.body.login.length < 4) {
 		res.send({ error: true, message: "Login too short" });
@@ -394,7 +456,7 @@ router.post("/register", async (req, res) => {
 		return;
 	}
 
-	if (req.body.password.length < 4) {
+	if (convertedString < 4) {
 		res.send({ error: true, message: "Password too short" });
 		return;
 	}
@@ -406,7 +468,7 @@ router.post("/register", async (req, res) => {
 	}
 
 
-	const password = await bcrypt.hash(req.body.password, saltRounds);
+	const password = await bcrypt.hash(convertedString, saltRounds);
 	var id = 0;
 	var code = Math.floor(Math.random() * 8888) + 1111;
 

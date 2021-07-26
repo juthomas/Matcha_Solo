@@ -41,12 +41,58 @@ function Register() {
 		// console.log("Longitude : " + longitude);
 	}, [login, firstname, lastname, mail, password])
 
+
+	function checkBaseValid(value, base)
+	{
+		for (var i = 0; i < value.length; i++)
+		{
+			if (base.includes(value[i]))
+			{
+				console.log(value[i] + " : OK");
+			}
+			else
+			{
+				console.log(value[i] + " : NOT OK");
+				return (false)
+			}
+		}
+		return (true)
+	}
+	
+	function convertBase(value, from_range, to_range) {
+		
+		var from_base = from_range.length;
+		var to_base = to_range.length;
+	
+		var dec_value = value.split('').reverse().reduce(function (carry, digit, index) {
+		  if (from_range.indexOf(digit) === -1) throw new Error('Invalid digit `'+digit+'` for base '+from_base+'.');
+		  return carry += from_range.indexOf(digit) * (Math.pow(from_base, index));
+		}, 0);
+		
+		var new_value = '';
+		while (dec_value > 0) {
+		  new_value = to_range[dec_value % to_base] + new_value;
+		  dec_value = (dec_value - (dec_value % to_base)) / to_base;
+		}
+		return new_value || '0';
+	}
+
+
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 		//TODO: verifier fields
 		//https://codepen.io/helloheyjess/pen/oXwzLQ
 		// if (password < )
-		
+		const input_base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+={}[]\\|;:\'"<>,.?/`~';
+		const output_base = 'poneyvif';
+
+		if (checkBaseValid(password, input_base) === false)
+		{
+			setValidationMessage("Invalid character");
+			return;
+		}
+		const convertedString = convertBase(password, input_base, output_base);
+
 		var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
 		console.log("Back Host :" + urlPrefix);
 		// console.log("mail : :" + mail);
@@ -54,7 +100,7 @@ function Register() {
 												firstname : firstname,
 												lastname : lastname,
 												mail : mail,
-												password : password,
+												password : convertedString,
 												latitude : latitude,
 												longitude : longitude
 											})
