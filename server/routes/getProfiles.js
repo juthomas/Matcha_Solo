@@ -16,7 +16,37 @@ router.post('/', auth, (req,res) => {
 	console.log("Token : " + token);
 	console.log("id : " + userId);
 
+
+	var toRadians = function (degree) {
+		return degree * (Math.PI / 180);
+	};
 	
+	/**
+	 * Compute latitude/longitude into distance
+	 * @param {Float32Array} latitude_a 
+	 * @param {Float32Array} longitude_a 
+	 * @param {Float32Array} latitude_b 
+	 * @param {Float32Array} longitude_b 
+	 */
+
+	function gps_distance(latitude_a, longitude_a, latitude_b, longitude_b)
+	{
+		var rad_lat_a = toRadians(latitude_a);
+		var rad_lon_a = toRadians(longitude_a);
+
+		var rad_lat_b = toRadians(latitude_b);
+		var rad_lon_b = toRadians(longitude_b);
+
+
+		var delta_lon = (rad_lon_b - rad_lon_a) / 2;
+		var delta_lat = (rad_lat_b - rad_lat_a ) / 2;
+		var a = (Math.sin(delta_lat) * Math.sin(delta_lat)) + Math.cos(rad_lat_a) * Math.cos(rad_lat_b)
+			 * (Math.sin(delta_lon) * Math.sin(delta_lon));
+		var distance = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		//6371 => rayon de la terre (km)
+		return (distance * 6371);
+	}
+
 	var min_age = 18;
 	var max_age = 20;
 	var min_likes = 0;
@@ -106,7 +136,18 @@ router.post('/', auth, (req,res) => {
 				}
 				else
 				{
-					res.send(results2);
+					var max_distance = 7000;
+
+					var filted_results = results2.filter(item => gps_distance(results1[0].latitude, results1[0].longitude, item.latitude, item.longitude) < max_distance)
+					
+					// console.log("Old results :")
+					// console.log(results2)
+					// console.log("New results :")
+					// console.log(filted_results)
+
+
+
+					res.send(filted_results);
 				}
 			})
 		}
