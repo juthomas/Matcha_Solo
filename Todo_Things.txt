@@ -17,6 +17,9 @@ Sql relationships (tab "Relationships")
 
 ->Prblm de token dans le truc du code ✅
 
+->Limiter l'envoi des infos au front (pas de mdp ou mail si pas besoin)
+
+
 ->Todo => tokens https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466557-creez-des-tokens-dauthentification
 
 

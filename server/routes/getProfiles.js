@@ -136,7 +136,7 @@ router.post('/', auth, (req,res) => {
 				}
 				else
 				{
-					var max_distance = 7000;
+					var max_distance = 10000;
 
 					var filted_results = results2.filter(item => gps_distance(results1[0].latitude, results1[0].longitude, item.latitude, item.longitude) < max_distance)
 					
