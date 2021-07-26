@@ -66,7 +66,8 @@ function Home() {
 		console.log("Relation type : ", relationType);
 	}
 	var button_clicked_ok = true;
-	function button_clicked() {
+	function button_clicked(like_type)
+	{
 		if (button_clicked_ok === false)
 		{
 			return;
@@ -83,7 +84,7 @@ function Home() {
 			console.log(profilesDatas.current[cardsCounter.current]);
 			
 			if (profilesDatas.current[cardsCounter.current])
-			add_friend(profilesDatas.current[cardsCounter.current].id, "super friends");
+			add_friend(profilesDatas.current[cardsCounter.current].id, like_type);
 			$currentCard.css("transition-duration", "0.5s");
 			$currentCard.addClass("to-right");
 			
@@ -392,33 +393,21 @@ function Home() {
 			</div>
 			{/* </div> */}
 			<div className="ReactionBar">
-				<button onClick={() => {
-					// add_friend(profilesDatas.current[cardsCounter].id, "gigas friends")
-					// console.log($card);
-					button_clicked();
-					// console.log($card)
-					// $card.css("transition-duration", "0.5s");
-					// $card.addClass("to-right");
-					// $card.addClass("inactive");
-
-					// $card.addClass("below").removeClass("inactive to-left to-right");
-
-					// cardsCounter++;
-				}}>
+				<button onClick={() => button_clicked("like friends")}>
 				<img alt="like_icon" src={process.env.PUBLIC_URL + "/img/like_icon.svg"} 
 				/>
 				</button>
-				<button>
+				<button onClick={() => button_clicked("hat friends")}>
 				<img alt="hat_icon" src={process.env.PUBLIC_URL + "/img/hat_icon.svg"} />
 				</button>
-				<button>
+				<button onClick={() => button_clicked("star friends")}>
 				<img alt="star_icon" src={process.env.PUBLIC_URL + "/img/star_icon.svg"} />
 
 				</button>
-				<button>
+				<button onClick={() => button_clicked("lightning friends")}>
 				<img alt="lightning_icon" src={process.env.PUBLIC_URL + "/img/lightning_icon.svg"} />
 				</button>
-				<button>
+				<button onClick={() => button_clicked("humain friends")}>
 				<img alt="bg_icon" src={process.env.PUBLIC_URL + "/img/bg_icon.svg"} />
 
 				</button>
