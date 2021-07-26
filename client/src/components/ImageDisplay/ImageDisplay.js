@@ -4,7 +4,7 @@ import "./ImageDisplay.css"
 function ImageDisplay(props) {
 	return (
         <div className="flapImage" style={{backgroundColor:"red"}}>                        
-            <img src={props.image}  className="profileImage" alt={props.image} style={{resizeMode: 'contain'}}/>
+            <img src={props.image}  className="profileImage" alt={props.image} style={{}}/>
             {
                 props.currentSlide && props.editMod ? 
                 <label htmlFor="icon-button-file"> 

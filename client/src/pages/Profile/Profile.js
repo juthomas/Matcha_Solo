@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles';
 import "./Profile.css"
 import { config } from "react-spring";
 import Carousel from "react-spring-3d-carousel";
@@ -7,6 +8,19 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Axios from 'axios'
 import ImageDisplay from "../../components/ImageDisplay/ImageDisplay"
 import AboutForm from "../../components/AboutForm/AboutForm"
+import CustomSlider from "../../components/CustomSlider/CustomSlider"
+import CreatableSelect from 'react-select/creatable';  
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
+  const animatedComponents = makeAnimated();
+  
 
 function Profile() {
 
@@ -18,21 +32,52 @@ function Profile() {
     const [{image4, data4}, setImage4] = useState({image4: process.env.PUBLIC_URL + "/img/No_image.png", data4:null});
     const [{image5, data5}, setImage5] = useState({image5: process.env.PUBLIC_URL + "/img/No_image.png", data5:null});
 
+    const [agePref, setAgePref] = useState([18, 99]);
+
+//   const handleChange = (event, newValue) => {
+//     setValue(newValue);
+//   }; 
+
     const [gender, setGender] = useState("Undefined");
     const [orientation, setOrientation] = useState("Undefined");
-    const [size, setSize] = useState("Undefined");
+    const [size, setSize] = useState(1);
     const [inspiration, setInspiration] = useState("Undefined");
     const [technique, setTechnique] = useState("Undefined");
     const [surname, setSurname] = useState("Undefined");
     const [popularity, setPopularity] = useState("Undefined");
-    const [age, setAge] = useState("Undefined");
+    const [age, setAge] = useState(1);
     const [lastConnexion, setlastConnexion] = useState("Undefined");
     const [city, setCity] = useState("Undefined");
     const [hTags, setHTags] = useState("Undefined");
     const [name, setName] = useState("Undefined");
     const [editMod, setEditMod] = useState(false);
     const [currentDescription, setCurrentDescription] = useState("");
-    //const [slides, setSlides] = useState([]);
+    const [prefAgeMin, setPrefAgeMin] = useState(18);
+    const [prefAgeMax, setPrefAgeMax] = useState(99);
+    const [prefPopularite, setPrefPopularite] = useState(null);
+    const [prefDistance, setPrefDistance] = useState(1);
+    const genderOptions = [
+        { value: 0, label: 'NonBinary' },
+        { value: 1, label: 'Male' },
+        { value: 2, label: 'Female' }
+    ];
+
+    const PopularityOptions = [
+        { value: 0, label: "NewComer" },
+        { value: 1, label: "Adventurer" },
+        { value: 2, label: "Amongus" },
+        { value: 3, label: "Collegue" },
+        { value: 4, label: "Masterchief" },
+        { value: 5, label: "King of Kings" },
+        { value: 6, label: "Dad" },
+        { value: 7, label: "Worshipped Galactic Entity 🐙" }
+    ];
+
+    const orientationOptions = [
+        { value: 0, label: 'Bi' },
+        { value: 1, label: 'Hetero' },
+        { value: 2, label: 'Homo' }
+    ];
 
     function setImage(index, file)
     {
@@ -118,7 +163,7 @@ function Profile() {
         if(data4)
         {
             data.append('file', data4);
-            setImage4({image4: urlPrefix + "/" + data4.name, data4:data4});
+            //setImage4({image4: urlPrefix + "/" + data4.name, data4:data4});
         }
         if(data5)
         {
@@ -131,7 +176,7 @@ function Profile() {
       })
     }
 
-    function refreshPage(isInEdit)
+    function refreshPage()
     {
         console.log(editMod);
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
@@ -152,10 +197,8 @@ function Profile() {
                 setImage1({image1:response.data.images[0] ? response.data.images[0] : process.env.PUBLIC_URL + "/img/No_image.png", data1: null})
                 setImage2({image2:response.data.images[1] ? response.data.images[1] : process.env.PUBLIC_URL + "/img/No_image.png", data2: null})
                 setImage3({image3:response.data.images[2] ? response.data.images[2] : process.env.PUBLIC_URL + "/img/No_image.png", data3: null})
-                if(response.data.images[3])
-                    setImage4({image3:response.data.images[3], data4: null})
-                if(response.data.images[4])
-                    setImage5({image3:response.data.images[4], data5: null})
+                setImage4({image4:response.data.images[3] ? response.data.images[3] : process.env.PUBLIC_URL + "/img/No_image.png", data4: null})
+                setImage5({image5:response.data.images[4] ? response.data.images[4] : process.env.PUBLIC_URL + "/img/No_image.png", data5: null})
         }, (error) => {
             console.log(error);
           }
@@ -183,21 +226,20 @@ function Profile() {
         if(data5)
             name5 = urlPrefix + "/" + data5.name;
         Axios.post(urlPrefix + "/user/update_profile", { userId: 470, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, image4:name4, image5:name5, description:currentDescription}).then((response) => {
-            refreshPage(!editMod);
+            //refreshPage();
         })
+        refreshPage();
     }
 
     useEffect(() => {
-            refreshPage(false);
-        }, [])
+            refreshPage();
+        }, [editMod])
 
     return (
         <div className="backgroundProfile">
         <div style={{backgroundColor:"red", width:"50px", height:"50px", right:"0", position: "absolute" }}></div>
         <button onClick={() => {
             setEditMod(!editMod);
-            console.log("Edit Mode : " + editMod);
-            refreshPage(!editMod);
             }} style={{backgroundColor:"red", width:"50px", height:"50px", right:"0", position: "absolute" }}>
            {
             !editMod ? <EditIcon style={{width:"80%", height:"80%"}}/> : <ArrowBackIcon style={{width:"80%", height:"80%"}}/>
@@ -213,46 +255,145 @@ function Profile() {
                 />
             </div>
             <div className="AboutZone">
-                <div className="appName" style={{ fontSize: "36px" }}>{name}</div>
-                <AboutForm subject="Gender :" value={gender} editMod={editMod} onChange={event => setGender(event.target.value)} canEdit={true} />
-                <AboutForm subject="Orientation :" value={orientation} editMod={editMod} onChange={event => setOrientation(event.target.value)} canEdit={true} />
-                <AboutForm subject="Sex Size :" value={size} editMod={editMod} onChange={event => setSize(event.target.value)} canEdit={true} />
+                <div style={{ fontSize: "36px", margin:"30px"}}>Informations</div>
+                <AboutForm subject="Name :" value={name} editMod={editMod} onChange={event => setName(event.target.value)} canEdit={true} />
+                <div style={{width:"80%", fontSize:"30px",  zIndex:"11"}}>
+                    <Select 
+                        isClearable
+                        isDisabled={!editMod}
+                        options={genderOptions}
+                        defaultValue={genderOptions[gender]}
+                        placeholder={'Gender'}/>
+                </div>
+                <br/>
+                <br/>
+                <div style={{width:"80%", fontSize:"30px", zIndex:"10"}}>
+                    <Select 
+                        isClearable
+                        components={animatedComponents}
+                        defaultValue={genderOptions}
+                        isMulti
+                        isDisabled={!editMod}
+                        placeholder={'Orientation'}
+                        options={genderOptions}/>
+                </div>
+                <div className="AboutForm" style={{fontSize:"30px"}}>
+                    Sex Size :
+                    <div>
+                    {
+                            editMod ?
+                    <CustomSlider      
+                        min={1}
+                        max={99}
+                        defaultMin={size}
+                        defaultMax={99}
+                        onChange={({ min, max }) => {
+                            setSize(min);
+                        }}
+                        range={false}
+                    />
+                    : <div style={{backgroundColor:"white", width:"35px", height:"40px", color:"black", border:"1px solid black", marginLeft:"20px", textAlign:"center"}}>{size}</div>
+                    }
+                    </div>
+                </div>
                 <AboutForm subject="Inspiration :" value={inspiration} editMod={editMod} onChange={event => setInspiration(event.target.value)} canEdit={true} />
                 <AboutForm subject="Secret Technique :" value={technique} editMod={editMod} onChange={event => setTechnique(event.target.value)} canEdit={true} />
                 <AboutForm subject="Surname :" value={surname} editMod={editMod} onChange={event => setSurname(event.target.value)} canEdit={true} />
                 <AboutForm subject="Popularity :" value={popularity} editMod={editMod} canEdit={false} />
-                <AboutForm subject="Age :" value={age} editMod={editMod} onChange={event => setAge(event.target.value)} canEdit={true}/>
+                <div className="AboutForm" style={{fontSize:"30px"}}>
+                    Age :
+                    <div>
+                        {
+                            editMod ?
+                                <CustomSlider      
+                                    min={1}
+                                    max={99}
+                                    defaultMin={age}
+                                    defaultMax={99}
+                                    onChange={({ min, max }) => {
+                                    setAge(min);
+                                    }}
+                                    range={false}
+                                />
+                            : <div style={{backgroundColor:"white", width:"35px", height:"40px", color:"black", border:"1px solid black", marginLeft:"20px", textAlign:"center"}}>{age}</div>
+                    }
+                    </div>
+                </div>
                 <AboutForm subject="Last Connexion :" value={lastConnexion} editMod={editMod} canEdit={false} />
                 <AboutForm subject="City :" value={city} editMod={editMod} onChange={event => setCity(event.target.value)}/>
-                <AboutForm subject="Orientation :" value={orientation} editMod={editMod} onChange={event => setOrientation(event.target.value)}/>
                 { 
-                        !editMod ? <div style={{ fontSize: "30px"}}>{currentDescription}</div> : <textarea className="AboutForm" style={{ backgroundColor:"white", color:"black", fontSize:"30px", height:"200px"}}
+                        <textarea disabled={!editMod} className="AboutForm" style={{ backgroundColor:"white", color:"black", fontSize:"30px", height:"200px"}}
                         onChange={event => setCurrentDescription(event.target.value)}
                         value={currentDescription} />
                 }
                 <br/>
-                <AboutForm subject="Tags :" value={hTags} editMod={editMod} onChange={event => setHTags(event.target.value)} canEdit={true}/>
-                {
-                    editMod ?
-                    <button onClick={() => {
-                    setEditMod(!editMod);
-                    update_profile();
-                    refreshPage(!editMod);
-                    }} style={{backgroundColor:"green", width:"100%", height:"100px", position: "relative", fontSize: "30px" }}>
-                        Save Modification
-                    </button>
-                    :null
-                }
+                <div style={{width:"80%", fontSize:"30px", zIndex:"10"}}>
+                    <CreatableSelect 
+                        isClearable
+                        components={animatedComponents}
+                        defaultValue={[options[4], options[5]]}
+                        isMulti
+                        isDisabled={!editMod}
+                        placeholder={'Tags'}
+                        options={options}/>
+                </div>
             </div>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+            {
+                editMod ?
+                <div>
+            <div className="AboutZone">
+            <div style={{ fontSize: "36px", margin:"30px"}}>Preferences</div>
+                <div className="AboutForm" style={{fontSize:"30px"}}>
+                    Age :
+                    <div>
+                    <CustomSlider      
+                        min={18}
+                        max={99}
+                        defaultMin={prefAgeMin}
+                        defaultMax={prefAgeMax}
+                        onChange={({ min, max }) => {
+                            setPrefAgeMax(max);
+                            setPrefAgeMin(min);
+                        }}
+                        range={true}
+                    />
+                    </div>
+                </div>
+                <div style={{width:"80%", fontSize:"30px", zIndex:"10"}}>
+                    <Select 
+                        isClearable
+                        components={animatedComponents}
+                        defaultValue={prefPopularite}
+                        isMulti
+                        placeholder={'Popularity'}
+                        options={PopularityOptions}/>
+                </div>
+                <div className="AboutForm" style={{fontSize:"30px"}}>
+                    Distance Max :
+                    <div>
+                                <CustomSlider      
+                                    min={1}
+                                    max={99}
+                                    defaultMin={prefDistance}
+                                    defaultMax={99}
+                                    onChange={({ min, max }) => {
+                                    setPrefDistance(min);
+                                    }}
+                                    range={false}
+                                />
+                    </div>
+                </div>
+            </div>
+            <button onClick={() => {
+                setEditMod(!editMod);
+                update_profile();
+                refreshPage();
+            }} style={{backgroundColor:"green", width:"100%", height:"100px", position: "relative", fontSize: "30px" }}>
+                Save Modification
+            </button>
+            </div>
+            :null
+            }
         </div>
     )
 }

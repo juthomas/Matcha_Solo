@@ -5,10 +5,10 @@ function AboutForm(props) {
 	return (
                 <div className="AboutForm">
                 { 
-                        !props.editMod ? <div style={{ fontSize: "30px"}}>{props.subject}{props.value}</div> : props.canEdit ? <div style={{ fontSize: "30px"}}>{props.subject} <br/><textarea style={{ fontSize: "30px"}} 
+                        <div style={{ fontSize: "30px"}}>{props.subject} <br/><textarea disabled={!props.editMod || !props.canEdit} style={{ backgroundColor:"white", color:"black", fontSize:"30px"}} 
                         onChange={props.onChange}
                         value={props.value}/></div>
-                        : null
+                        
                 }
                 </div>
 	)

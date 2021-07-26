@@ -457,9 +457,10 @@ router.post("/get_profile", (req, res) => {
 	console.log("get profile");
 	const userId = req.body.userId;
 	var profileData = [];
-	console.log(userId);
 	db.query("SELECT * FROM Users WHERE id = ?", [userId],
 	(err, results) => {
+		if(err)
+			console.log(err);
 		var popularity = "";
 		var orientation = "";
 
@@ -472,7 +473,7 @@ router.post("/get_profile", (req, res) => {
 		else if(results.numberofLikes > 100)
 			popularity = "Masterchief";
 		else if(results.numberofLikes > 50)
-			popularity = "Star";
+			popularity = "Collegue";
 		else if(results.numberofLikes > 15)
 			popularity = "Amongus";
 		else if(results.numberofLikes > 5)
@@ -505,7 +506,7 @@ router.post("/get_profile", (req, res) => {
 			popularity : popularity,
 		};
 		//console.log(results[0]);
-		//console.log(profileData);
+		// console.log(profileData);
 		res.json(profileData);
 	});
 })
@@ -681,13 +682,14 @@ router.post('/upload', (req, res) => {
 router.post("/update_profile", (req, res) => {
 	console.log("modify profile");
 	const userId = req.body.userId;
-	console.log(req.body.image2);
-	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ?, image1 = ?, image2 = ?, image3 = ? WHERE (id = ?)",
-			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname,req.body.age, req.body.description, req.body.htags, req.body.image1, req.body.image2, req.body.image3, userId],
+	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ?, image1 = ?, image2 = ?, image3 = ?, image4 = ?, image5 = ? WHERE (id = ?)",
+			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname, req.body.age, req.body.description, req.body.htags, req.body.image1, req.body.image2, req.body.image3, req.body.image4, req.body.image5, userId],
 		(err, results) => {
 			if (err) {
 				console.log(err);
 			}
+
+			console.log(results);
 			});
 })
 
