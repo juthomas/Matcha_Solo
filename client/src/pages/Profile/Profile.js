@@ -13,12 +13,6 @@ import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
-
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
   const animatedComponents = makeAnimated();
   
 
@@ -48,14 +42,16 @@ function Profile() {
     const [age, setAge] = useState(1);
     const [lastConnexion, setlastConnexion] = useState("Undefined");
     const [city, setCity] = useState("Undefined");
-    const [hTags, setHTags] = useState("Undefined");
+    const [selectedTags, setSelectedTags] = useState([]);
     const [name, setName] = useState("Undefined");
+    const [lastName, setLastName] = useState("Undefined");
     const [editMod, setEditMod] = useState(false);
     const [currentDescription, setCurrentDescription] = useState("");
     const [prefAgeMin, setPrefAgeMin] = useState(18);
     const [prefAgeMax, setPrefAgeMax] = useState(99);
     const [prefPopularite, setPrefPopularite] = useState(null);
     const [prefDistance, setPrefDistance] = useState(1);
+    const [tagsOptions, setTagsOptions] = useState([]);
     const genderOptions = [
         { value: 0, label: 'NonBinary' },
         { value: 1, label: 'Male' },
@@ -78,6 +74,11 @@ function Profile() {
         { value: 1, label: 'Hetero' },
         { value: 2, label: 'Homo' }
     ];
+
+    const onInputChange = (inputValue, { action }) => {
+        console.log("COUOUC");
+        console.log(inputValue, action);
+      };
 
     function setImage(index, file)
     {
@@ -180,6 +181,8 @@ function Profile() {
     {
         console.log(editMod);
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
+        var Tags = [];
+        var SelectedTags = [];
         Axios.post(urlPrefix + "/user/get_profile", { userId: 470 })
             .then((response) => {
                 setGender(response.data.gender);
@@ -203,6 +206,27 @@ function Profile() {
             console.log(error);
           }
         )
+        Axios.post(urlPrefix + "/user/getTags", { userId: 470 })
+            .then((response) => {
+                response.data.map((element, index) => {
+                    Tags.push(
+                        {
+                            value : index,
+                            label : element.name
+                        })
+                    if(element.isSelected)
+                    {
+                        SelectedTags.push(
+                            {
+                                value : index,
+                                label : element.name
+                            }
+                            )
+                    }
+                });
+                setTagsOptions(Tags);
+                setSelectedTags(SelectedTags);
+            })
     }
 
     function update_profile()
@@ -257,6 +281,7 @@ function Profile() {
             <div className="AboutZone">
                 <div style={{ fontSize: "36px", margin:"30px"}}>Informations</div>
                 <AboutForm subject="Name :" value={name} editMod={editMod} onChange={event => setName(event.target.value)} canEdit={true} />
+                <AboutForm subject="LastName :" value={lastName} editMod={editMod} onChange={event => setLastName(event.target.value)} canEdit={true} />
                 <div style={{width:"80%", fontSize:"30px",  zIndex:"11"}}>
                     <Select 
                         isClearable
@@ -331,11 +356,10 @@ function Profile() {
                     <CreatableSelect 
                         isClearable
                         components={animatedComponents}
-                        defaultValue={[options[4], options[5]]}
                         isMulti
                         isDisabled={!editMod}
                         placeholder={'Tags'}
-                        options={options}/>
+                        options={genderOptions}/>
                 </div>
             </div>
             {

@@ -10,6 +10,7 @@ const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { getPackedSettings } = require("http2");
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -351,6 +352,41 @@ function getFormattedLocalTime()
 
 	return (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
 }
+
+router.post("/getTags", async (req, res) => {
+	const user_id = req.body.userId;
+	var tagsData = [];
+	var flag = false;
+	console.log(user_id)
+	db.query("SELECT * FROM Tags", (err, results) => {
+		if(err)
+			console.log(err);
+		db.query("SELECT tag_id FROM tagsUser WHERE user_id = ?", [user_id], (err2, results2) => {
+			if(err2)
+				console.log(err2);
+			results.forEach(element => {
+				flag = false;
+				for(var i = 0; i < results2.length; i++) 
+				{
+					if (results2[i].tag_id == element.tag_id) {
+						flag = true;
+						break;
+					}
+				}
+				tagsData.push(
+					{
+					id : element.tag_id,
+					name : element.tag_name,
+					isSelected : flag
+					}
+				);
+			})
+			console.log("Get Tags :");
+			console.log(tagsData);
+			res.json(tagsData);
+			});
+		});
+	});
 
 router.post("/register", async (req, res) => {
 	console.log("register button");
