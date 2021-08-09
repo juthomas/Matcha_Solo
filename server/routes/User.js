@@ -717,6 +717,7 @@ router.post('/upload', (req, res) => {
 
 router.post("/update_profile", (req, res) => {
 	console.log("modify profile");
+	console.log(req.body.tags);
 	const userId = req.body.userId;
 	db.query("UPDATE Users SET gender = ?, orientation = ?, size = ?, inspiration = ?, technique = ?, surname = ?, age = ?, description = ?, htags = ?, image1 = ?, image2 = ?, image3 = ?, image4 = ?, image5 = ? WHERE (id = ?)",
 			[req.body.gender, req.body.orientation, req.body.size, req.body.inspiration, req.body.technique, req.body.surname, req.body.age, req.body.description, req.body.htags, req.body.image1, req.body.image2, req.body.image3, req.body.image4, req.body.image5, userId],
@@ -727,6 +728,7 @@ router.post("/update_profile", (req, res) => {
 
 			console.log(results);
 			});
+	// db.query("INSERT INTO Tags FROM Tags")
 })
 
 router.post("/send_message", (req, res) => {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
 import "./Profile.css"
 import { config } from "react-spring";
 import Carousel from "react-spring-3d-carousel";
@@ -27,10 +26,6 @@ function Profile() {
     const [{image5, data5}, setImage5] = useState({image5: process.env.PUBLIC_URL + "/img/No_image.png", data5:null});
 
     const [agePref, setAgePref] = useState([18, 99]);
-
-//   const handleChange = (event, newValue) => {
-//     setValue(newValue);
-//   }; 
 
     const [gender, setGender] = useState("Undefined");
     const [orientation, setOrientation] = useState("Undefined");
@@ -75,10 +70,9 @@ function Profile() {
         { value: 2, label: 'Homo' }
     ];
 
-    const onInputChange = (inputValue, { action }) => {
-        console.log("COUOUC");
-        console.log(inputValue, action);
-      };
+    const handleChange = (selector, event) => {
+        console.log(event);
+    };
 
     function setImage(index, file)
     {
@@ -179,7 +173,6 @@ function Profile() {
 
     function refreshPage()
     {
-        console.log(editMod);
         var urlPrefix = window.location.protocol + "//" + window.location.hostname + ":3001";
         var Tags = [];
         var SelectedTags = [];
@@ -239,6 +232,7 @@ function Profile() {
         var name3 = image3;
         var name4 = image4;
         var name5 = image5;
+        var newTags = [];
         if(data1)
             name1 = urlPrefix + "/" + data1.name;
         if(data2)
@@ -249,7 +243,20 @@ function Profile() {
             name4 = urlPrefix + "/" + data4.name;
         if(data5)
             name5 = urlPrefix + "/" + data5.name;
-        Axios.post(urlPrefix + "/user/update_profile", { userId: 470, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, image4:name4, image5:name5, description:currentDescription}).then((response) => {
+        selectedTags.forEach(selTag => {
+            tagsOptions.forEach(tag =>
+            {
+                console.log(selTag.label + " " + tag.label);
+                console.log(selTag.label === tag.label)
+                if(selTag.label !== tag.label && !newTags.includes(selTag.label))
+                {
+                    newTags.push(selTag.label);
+                }
+                console.log(" ");
+            })
+        });
+        console.log(newTags);
+        Axios.post(urlPrefix + "/user/update_profile", { userId: 470, gender: gender, orientation:orientation, size:size, inspiration: inspiration, technique:technique, surname: surname, age:age, lastConnexion:lastConnexion, name:name, city:city, image1:name1, image2:name2, image3:name3, image4:name4, image5:name5, description:currentDescription, tags:selectedTags}).then((response) => {
             //refreshPage();
         })
         refreshPage();
@@ -353,13 +360,16 @@ function Profile() {
                 }
                 <br/>
                 <div style={{width:"80%", fontSize:"30px", zIndex:"10"}}>
-                    <CreatableSelect 
+                    <CreatableSelect
                         isClearable
-                        components={animatedComponents}
                         isMulti
+                        value={selectedTags}
+                        onChange ={ (inputValue, { action }) => {
+                            setSelectedTags(inputValue);
+                        }}
                         isDisabled={!editMod}
                         placeholder={'Tags'}
-                        options={genderOptions}/>
+                        options={tagsOptions}/>
                 </div>
             </div>
             {
